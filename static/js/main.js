@@ -3,17 +3,18 @@ window.onload = function() {
 
   var parse = new Parse('visualization');
 
-  fetch('/parse?query=' + query)
+  var input = document.getElementById('query')
+  input.oninput = function(event) {
+    // if (event.key == ' ') {
+    //
+    // };
+    console.log(event.key)
+    fetch('/parse?query=' + input.value)
     .then(function(response) {
       return response.json();
     })
     .then(function(json) {
       parse.render(json.tokens);
     });
-
-  parse.network.on('click', function(properties) {
-    if (properties.nodes.length > 0) {
-      parse.toggle(properties.nodes[0]);
-    }
-  });
+  };
 }

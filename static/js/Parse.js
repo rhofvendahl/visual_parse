@@ -9,23 +9,27 @@ var Parse = function(container) {
   var options = {};
   self.network = new vis.Network(container, data, options);
 
-  self.tokens = undefined;
+  self.tokens = [];
 
-  self.render = function(tokens) {
-    self.tokens = tokens;
-    tokens.forEach(function(token) {
-      self.nodes.add({
+  self.render = function(new_tokens) {
+    new_tokens.forEach(function(token) {
+      self.nodes.update({
         id: token.id,
         label: token.text,
         hover: token.pos
       });
-      self.edges.add({
+      self.edges.update({
+        id: token.id,
         from: token.head_id,
         to: token.id,
         label: token.dep,
         arrows: 'to'
       });
     });
+    for (var i = new_tokens.length; i < self.tokens.length; i++) {
+      self.nodes.remove(i);
+    }
+    self.tokens = new_tokens;
   };
 
   self.toggle = function(id, head=true, collapsing=undefined) {
@@ -46,4 +50,10 @@ var Parse = function(container) {
       }
     });
   };
+
+  self.network.on('click', function(properties) {
+    if (properties.nodes.length > 0) {
+      self.toggle(properties.nodes[0]);
+    }
+  });
 }
