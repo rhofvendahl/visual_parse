@@ -17,7 +17,40 @@ def index():
 def parse():
     query = request.args.get('query')
     doc = nlp(query)
-    return jsonify(displacy.parse_deps(doc))
+
+    nodes = []
+    edges = []
+    for token in doc:
+        node = {
+            'id': str(token.i),
+            'label': token.text,
+            'title': token.pos_,
+            'hidden': True
+        }
+        nodes += [node]
+        print(node['id'])
+
+        edge = {
+            'from': str(token.head.i),
+            'to': node['id'],
+            'label': token.dep_,
+            'arrows': 'to'
+        }
+        edges += [edge]
+
+        if len([child for child in token.children]) > 0:
+            node_c = dict(node)
+            node_c['id'] += '_c'
+            node_c['label'] = ' '.join([token.text for token in token.subtree])
+            node_c['hidden'] = False
+            nodes += [node_c]
+            print(node_c['id'])
+
+            edge_c = dict(edge)
+            edge_c['to'] = node_c['id']
+            edges += [edge_c]
+
+    return jsonify({'nodes': nodes, 'edges': edges})
 
 if __name__ == "__main__":
     app.run()
