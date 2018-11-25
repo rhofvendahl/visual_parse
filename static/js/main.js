@@ -1,14 +1,12 @@
 window.onload = function() {
 
-  var query = 'John went to the snow.'
+  var query = "I'm just feeling pretty bad, yeah I just feel like you know how you have plans that you set for yourself and you think, oh by 30 this will happen and I feel like it was going in the right direction and then everything just got messed up and it's mostly my fault so..."
   fetch('/parse?query=' + query)
     .then(function(response) {
       return response.json();
     })
     .then(function(json) {
       var tokens = json.tokens;
-      console.log(tokens)
-
       var nodes = new vis.DataSet();
       var edges = new vis.DataSet();
       tokens.forEach(function(token) {
@@ -26,10 +24,7 @@ window.onload = function() {
       });
 
       var container = document.getElementById('visualization');
-      var data = {
-        nodes: nodes,
-        edges: edges
-      };
+      var data = {nodes: nodes, edges: edges};
       var options = {};
       var network = new vis.Network(container, data, options)
 
