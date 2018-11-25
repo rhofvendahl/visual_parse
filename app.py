@@ -25,7 +25,7 @@ def parse():
             'dep': token.dep_,
             'collapsed': False,
             'collapsed_text': ' '.join([token.text for token in token.subtree]),
-            'child_ids': [child.i for child in token.subtree if child != token]
+            'child_ids': [child.i for child in token.children]
         }]
     return jsonify({'tokens': tokens})
 
