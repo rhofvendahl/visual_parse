@@ -15,19 +15,20 @@ def parse():
     query = request.args.get('query')
     doc = nlp(query)
 
-    tokens = []
+    noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
+    data = []
     for token in doc:
-        tokens  += [{
+        data  += [{
             'id': token.i,
             'text': token.text,
             'pos': token.pos_,
             'head_id': token.head.i,
             'dep': token.dep_,
-            'collapsed': False,
+            'noun_chunk_head': token in noun_chunk_tokens,
             'collapsed_text': ' '.join([token.text for token in token.subtree]),
             'child_ids': [child.i for child in token.children]
         }]
-    return jsonify({'tokens': tokens})
+    return jsonify({'data': data})
 
 if __name__ == "__main__":
     app.run()

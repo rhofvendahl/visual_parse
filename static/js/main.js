@@ -1,7 +1,5 @@
 window.onload = function() {
-  var query = "I'm just feeling pretty bad"
-
-  var parse = new Parse('visualization');
+  window.parse = new Parse('visualization');
 
   var input = document.getElementById('query')
   input.oninput = function(event) {
@@ -14,7 +12,7 @@ window.onload = function() {
       return response.json();
     })
     .then(function(json) {
-      parse.render(json.tokens);
+      parse.render(json.data);
     });
   };
 }
