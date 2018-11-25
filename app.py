@@ -18,39 +18,20 @@ def parse():
     query = request.args.get('query')
     doc = nlp(query)
 
-    nodes = []
-    edges = []
+    tokens = []
     for token in doc:
-        node = {
-            'id': str(token.i),
-            'label': token.text,
-            'title': token.pos_,
-            'hidden': True
-        }
-        nodes += [node]
-        print(node['id'])
-
-        edge = {
-            'from': str(token.head.i),
-            'to': node['id'],
-            'label': token.dep_,
-            'arrows': 'to'
-        }
-        edges += [edge]
-
-        if len([child for child in token.children]) > 0:
-            node_c = dict(node)
-            node_c['id'] += '_c'
-            node_c['label'] = ' '.join([token.text for token in token.subtree])
-            node_c['hidden'] = False
-            nodes += [node_c]
-            print(node_c['id'])
-
-            edge_c = dict(edge)
-            edge_c['to'] = node_c['id']
-            edges += [edge_c]
-
-    return jsonify({'nodes': nodes, 'edges': edges})
+        tokens  += [{
+            'id': token.i,
+            'text': token.text,
+            'pos': token.pos_,
+            'collapsed': False,
+            'collapsed_text': ' '.join([token.text for token in token.subtree]),
+            'child_ids': [child.i for child in token.subtree if child != token],
+            'head_id': token.head.i,
+            'dep': token.dep_
+        }]
+    print(tokens)
+    return jsonify({'tokens': tokens})
 
 if __name__ == "__main__":
     app.run()
