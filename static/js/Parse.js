@@ -10,13 +10,14 @@ var Parse = function(container) {
   self.network = new vis.Network(container, data, options);
 
   self.tokens = [];
+  self.root = undefined;
 
 
 
   self.render = function(data) {
     new_tokens = [];
     data.forEach(function(token) {
-      token.collapsed = false;
+      token.collapsed = token.noun_chunk_head;
       console.log(token.text, token.noun_chunk_head);
       if (token.pos == 'NOUN' || token.pos == 'PRON') {
         token.color = 'pink';
@@ -26,6 +27,7 @@ var Parse = function(container) {
         token.color = 'lightgrey'
       }
       new_tokens.push(token);
+      if (token.dep == 'ROOT') self.root_id = token.id;
 
       self.nodes.update({
         id: token.id,
@@ -40,36 +42,66 @@ var Parse = function(container) {
         label: token.dep,
         arrows: 'to'
       });
-      if (token.noun_phrase_head) self.toggle(token.id);
+      if (token.noun_chunk_head) {
+        console.log('should toggle', token.id)
+      }
     });
     for (var i = new_tokens.length; i < self.tokens.length; i++) {
       self.nodes.remove(i);
     }
     self.tokens = new_tokens;
+    self.apply_collapse();
   };
 
-  self.toggle = function(id, collapsing=undefined, head=true) {
+  self.apply_collapse = function(id=self.root_id, hidden=false) {
+    console.log('id is', id)
     token = this.tokens[id]
-    if (head) {
-      token.collapsed = !token.collapsed
-      collapsing = token.collapsed
+    console.log('token is', token)
+    if (id == self.root_id) {
       self.nodes.update({
         id: token.id,
         label: (token.collapsed ? token.collapsed_text : token.text)
       })
     }
 
+    if (token.collapsed) hidden = true;
+
     token.child_ids.forEach(function(child_id) {
-      self.nodes.update({id: child_id, hidden: collapsing});
-      if (!self.tokens[child_id].collapsed) {
-        self.toggle(child_id, collapsing, false)
-      }
+      child = self.tokens[child_id]
+      self.nodes.update({
+        id: child_id,
+        label: (child.collapsed ? child.collapsed_text : child.text),
+        hidden: hidden
+      });
+
+      self.apply_collapse(child_id, hidden)
     });
   };
 
+  // self.toggle = function(id, collapsing=undefined, head=true) {
+  //   token = this.tokens[id]
+  //   if (head) {
+  //     token.collapsed = !token.collapsed
+  //     collapsing = token.collapsed
+  //     self.nodes.update({
+  //       id: token.id,
+  //       label: (token.collapsed ? token.collapsed_text : token.text)
+  //     })
+  //   }
+  //
+  //   token.child_ids.forEach(function(child_id) {
+  //     self.nodes.update({id: child_id, hidden: collapsing});
+  //     if (!self.tokens[child_id].collapsed) {
+  //       self.toggle(child_id, collapsing, false)
+  //     }
+  //   });
+  // };
+
   self.network.on('click', function(properties) {
     if (properties.nodes.length > 0) {
-      self.toggle(properties.nodes[0]);
+      token = self.tokens[properties.nodes[0]];
+      token.collapsed = !token.collapsed;
+      self.apply_collapse(properties.nodes[0]);
     }
   });
 }
