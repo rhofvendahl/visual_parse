@@ -21,6 +21,7 @@ def parse():
         js_tokens  += [{
             'id': token.i,
             'text': token.text,
+            'tag': token.tag_,
             'pos': token.pos_,
             'headId': token.head.i,
             'dep': token.dep_,

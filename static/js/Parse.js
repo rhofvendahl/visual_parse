@@ -13,7 +13,7 @@ var Parse = function() {
   self.root = undefined;
 
   // collapse nodes where collapse=true
-  self.update_visual = function(id=self.rootId, head=true, hiding=false) {
+  self.update_visual = function(id=self.rootId, head=true, hidden=false) {
     token = this.tokens[id]
     if (head) {
       self.nodes.update({
@@ -23,16 +23,16 @@ var Parse = function() {
       })
     }
 
-    // start hiding if collapsed, call recursively
-    if (token.collapsed) hiding = true;
+    // start hidden if collapsed, call recursively
+    if (token.collapsed) hidden = true;
     token.childIds.forEach(function(childId) {
       child = self.tokens[childId]
       self.nodes.update({
         id: childId,
         label: (child.collapsed ? child.collapsedText : child.text),
-        hidden: hiding
+        hidden: hidden
       });
-      self.update_visual(childId, false, collapsing)
+      self.update_visual(childId, false, hidden)
     });
   };
 
@@ -58,7 +58,7 @@ var Parse = function() {
         // collapse noun chunks
         token.collapsed = token.nounChunkHead;
 
-        // color nouns and verbs
+        // color nouns pink and verbs blue
         if (token.pos == 'NOUN' || token.pos == 'PRON') {
           token.color = 'pink';
         } else if (token.pos == 'VERB') {
@@ -69,11 +69,10 @@ var Parse = function() {
 
         // set root of parse tree
         if (token.dep == 'ROOT') self.rootId = token.id;
-
         self.nodes.update({
           id: token.id,
           label: token.text,
-          title: token.pos,
+          title: tagDescriptions[token.tag],
           color: token.color,
         });
         self.edges.update({
@@ -81,6 +80,7 @@ var Parse = function() {
           from: token.headId,
           to: token.id,
           label: token.dep,
+          title: depDescriptions[token.dep],
           arrows: 'to'
         });
       });
