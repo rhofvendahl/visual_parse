@@ -4,9 +4,13 @@ window.onload = function() {
   var input = document.getElementById('query');
   parse.update(input.value);
 
+  input.focus();
+  input.selectionStart = 0;
+  input.selectionEnd = input.value.length
+
   //don't update constantly if timeOuts overlap
   var timeOuts = 0;
-  input.oninput = function(event) {
+  document.oninput = function(event) {
     var updated = false;
     if (timeOuts == 0) {
       parse.update(input.value);

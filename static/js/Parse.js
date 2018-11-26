@@ -52,8 +52,8 @@ var Parse = function() {
       return response.json();
     })
     .then(function(json) {
-      self.tokens = json;
-      self.tokens.forEach(function(token) {
+      new_tokens = json;
+      new_tokens.forEach(function(token) {
 
         // collapse noun chunks
         token.collapsed = token.nounChunkHead;
@@ -86,10 +86,11 @@ var Parse = function() {
       });
 
       // remove extra nodes
-      for (var i = self.tokens.length; i < self.nodes.length; i++) {
+      for (var i = new_tokens.length; i < self.tokens.length; i++) {
+        console.log('removing', i)
         self.nodes.remove(i);
       }
-
+      self.tokens = new_tokens
       if (self.tokens.length > 0) self.update_visual();
     });
   };
