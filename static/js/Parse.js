@@ -1,4 +1,4 @@
-var Parse = function(container) {
+var Parse = function() {
   var self = this;
 
   self.nodes = new vis.DataSet();
@@ -18,7 +18,6 @@ var Parse = function(container) {
     new_tokens = [];
     data.forEach(function(token) {
       token.collapsed = token.noun_chunk_head;
-      console.log(token.text, token.noun_chunk_head);
       if (token.pos == 'NOUN' || token.pos == 'PRON') {
         token.color = 'pink';
       } else if (token.pos == 'VERB') {
@@ -43,20 +42,18 @@ var Parse = function(container) {
         arrows: 'to'
       });
       if (token.noun_chunk_head) {
-        console.log('should toggle', token.id)
       }
     });
     for (var i = new_tokens.length; i < self.tokens.length; i++) {
       self.nodes.remove(i);
     }
     self.tokens = new_tokens;
-    self.apply_collapse();
+    if (self.tokens.length > 0) self.apply_collapse();
   };
 
   self.apply_collapse = function(id=self.root_id, head=true, hidden=false) {
     token = this.tokens[id]
     if (head) {
-      console.log('head', id)
       self.nodes.update({
         id: id,
         label: (token.collapsed ? token.collapsed_text : token.text),
@@ -85,4 +82,15 @@ var Parse = function(container) {
       self.apply_collapse(properties.nodes[0]);
     }
   });
+
+  self.update = function(query) {
+    console.log('update!')
+    fetch('/parse?query=' + query)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      parse.render(json.data);
+    });
+  };
 }

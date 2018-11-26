@@ -1,18 +1,26 @@
 window.onload = function() {
-  window.parse = new Parse('visualization');
+  window.parse = new Parse();
 
-  var input = document.getElementById('query')
+  var input = document.getElementById('query');
+  parse.update(input.value);
+
+  //don't update constantly if timeOuts overlap
+  var timeOuts = 0;
   input.oninput = function(event) {
-    // if (event.key == ' ') {
-    //
-    // };
-    console.log(event.key)
-    fetch('/parse?query=' + input.value)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(json) {
-      parse.render(json.data);
-    });
+    var updated = false;
+    if (timeOuts == 0) {
+      parse.update(input.value);
+      var updated = true;
+    }
+    timeOuts += 1
+    setTimeout(function() {
+      timeOuts -= 1;
+      if (timeOuts == 0 && !updated) parse.update(input.value);
+    }, 100)
   };
+
+  //update at intervals if timeOuts overlap
+  setInterval(function() {
+    if (timeOuts > 1) parse.update(input.value)
+  }, 100);
 }
