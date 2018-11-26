@@ -5,10 +5,10 @@ window.onload = function() {
   parse.update(input.value);
 
   input.focus();
-  input.selectionStart = 0;
-  input.selectionEnd = input.value.length
+  input.selectionStart = input.value.length;
+  input.selectionEnd = input.value.length;
 
-  //don't update constantly if timeOuts overlap
+  // don't update constantly if timeOuts overlap
   var timeOuts = 0;
   document.oninput = function(event) {
     var updated = false;
@@ -23,7 +23,7 @@ window.onload = function() {
     }, 100)
   };
 
-  //update at intervals if timeOuts overlap
+  // update at intervals if timeOuts overlap
   setInterval(function() {
     if (timeOuts > 1) parse.update(input.value)
   }, 100);
