@@ -87,7 +87,6 @@ var Parse = function() {
 
       // remove extra nodes
       for (var i = new_tokens.length; i < self.tokens.length; i++) {
-        console.log('removing', i)
         self.nodes.remove(i);
       }
       self.tokens = new_tokens
