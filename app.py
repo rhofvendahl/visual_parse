@@ -20,7 +20,7 @@ def parse():
     for token in doc:
         data  += [{
             'id': token.i,
-            'text': token.text,
+            'text': str(token.i) + '. ' + token.text,
             'pos': token.pos_,
             'head_id': token.head.i,
             'dep': token.dep_,
