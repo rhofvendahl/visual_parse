@@ -12,8 +12,8 @@ var Parse = function() {
   self.tokens = [];
   self.root = undefined;
 
-  // collapse nodes where collapse=true
-  self.update_visual = function(id=self.rootId, head=true, hidden=false) {
+  // COLLAPSE NODES WHERE COLLAPSE=TRUE
+  self.update_visual = function(id=self.rootId, head=true, hideDescendents=false) {
     token = this.tokens[id]
     if (head) {
       self.nodes.update({
@@ -23,20 +23,42 @@ var Parse = function() {
       })
     }
 
-    // start hidden if collapsed, call recursively
-    if (token.collapsed) hidden = true;
+    // start hiding nodes if collapsed, call recursively
+    if (token.collapsed) hideDescendents = true;
     token.childIds.forEach(function(childId) {
       child = self.tokens[childId]
       self.nodes.update({
         id: childId,
         label: (child.collapsed ? child.collapsedText : child.text),
-        hidden: hidden
+        hidden: hideDescendents
       });
-      self.update_visual(childId, false, hidden)
+      self.update_visual(childId, false, hideDescendents)
     });
   };
 
-  // collapse when clicked
+  self.hide_descendents = function(id) {
+    tokens[id].childIds.forEach(function(childId) {
+      self.nodes.update({
+        id: childId,
+        hidden: true
+      });
+      self.hide_descendents(child_id)
+    });
+  }
+
+  // COLLAPSE NODES WHERE COLLAPSE=TRUE
+  self.collapse_if_collapsed = function(id=self.root_id) {
+    token = self.tokens[id]
+    if (token.collapsed) {
+      self.nodes.update({
+        id: id,
+        label: token.collapsed_text
+      });
+      self.hide_descendents(id)
+    }
+  };
+
+  // COLLAPSE WHEN CLICKED
   self.network.on('click', function(properties) {
     if (properties.nodes.length > 0) {
       token = self.tokens[properties.nodes[0]];
@@ -45,7 +67,7 @@ var Parse = function() {
     }
   });
 
-  // update from query
+  // UPDATE FROM QUERY
   self.update = function(query) {
     fetch('/parse?query=' + query)
     .then(function(response) {
