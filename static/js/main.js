@@ -1,5 +1,5 @@
 window.onload = function() {
-  window.parseTree = new ParseTree();
+  parseTree = new ParseTree();
 
   var input = document.getElementById('query');
   parseTree.process(input.value);
