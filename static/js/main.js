@@ -1,8 +1,8 @@
 window.onload = function() {
-  window.parse = new Parse();
+  window.parseTree = new ParseTree();
 
   var input = document.getElementById('query');
-  parse.update(input.value);
+  parseTree.process(input.value);
 
   input.focus();
   input.selectionStart = input.value.length;
@@ -13,18 +13,18 @@ window.onload = function() {
   document.oninput = function(event) {
     var updated = false;
     if (timeOuts == 0) {
-      parse.update(input.value);
+      parseTree.process(input.value);
       var updated = true;
     }
     timeOuts += 1
     setTimeout(function() {
       timeOuts -= 1;
-      if (timeOuts == 0 && !updated) parse.update(input.value);
+      if (timeOuts == 0 && !updated) parseTree.process(input.value);
     }, 100)
   };
 
   // update at intervals if timeOuts overlap
   setInterval(function() {
-    if (timeOuts > 1) parse.update(input.value)
+    if (timeOuts > 1) parseTree.process(input.value)
   }, 100);
 }

@@ -15,20 +15,21 @@ def parse():
     doc = nlp(query)
 
     noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
-    js_tokens = []
+    tokens = []
     for token in doc:
-        js_tokens  += [{
+        tokens  += [{
             'id': token.i,
             'text': token.text,
             'tag': token.tag_,
             'pos': token.pos_,
-            'headId': token.head.i,
+            'head_id': token.head.i,
             'dep': token.dep_,
-            'nounChunkHead': token in noun_chunk_tokens,
-            'collapsedText': ' '.join([token.text for token in token.subtree]),
-            'childIds': [child.i for child in token.children]
+            'noun_chunk_head': token in noun_chunk_tokens,
+            'collapsed_text': ' '.join([token.text for token in token.subtree]),
+            'child_ids': [child.i for child in token.children]
         }]
-    return jsonify(js_tokens)
+    print([token.dep_ for token in nlp('This is a dependency-based parse tree. Click, hover and type to explore!')])
+    return jsonify(tokens)
 
 if __name__ == "__main__":
     app.run()
