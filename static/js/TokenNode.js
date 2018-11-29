@@ -41,7 +41,7 @@ var TokenNode = function(parseTree, token) {
     if (self.dep != 'ROOT') {
       self.hidden = self.head.collapsed || self.head.hidden;
     }
-    
+
     self.parseTree.nodes.update({
       id: self.id,
       label: self.collapsed ? self.collapsedText : self.text,
@@ -57,5 +57,5 @@ var TokenNode = function(parseTree, token) {
       title: depDescriptions[self.dep],
       arrows: 'to'
     });
-  };
+  }
 }

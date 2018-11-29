@@ -4,78 +4,61 @@ var ParseTree = function() {
   self.nodes = new vis.DataSet();
   self.edges = new vis.DataSet();
 
-  self.tokenNodes = []
-  self.root = null;
-
   var container = document.getElementById('visualization');
   var data = {nodes: self.nodes, edges: self.edges};
   var options = {};
   self.network = new vis.Network(container, data, options);
 
-  self.tokens = [];
-  self.root = undefined;
+  self.tokenNodes = []
 
   //// DOESN'T BELONG
   // RETURN TOKENNODE BY ID
   self.getTokenNode = function(id) {
     var match = null;
     self.tokenNodes.forEach(function(tokenNode) {
-      if (tokenNode.id == id) match =  tokenNode;
+      if (tokenNode.id == id) match = tokenNode;
     });
     return match;
   }
 
-  //// SORTA BELONGS
-  // TURN TOKENS INTO TOKENNODES
-  self.import = function(tokens) {
-    self.tokenNodes = [];
-    self.root = null;
-
-    if (tokens.length > 0) {
-      var rootId;
-      tokens.forEach(function(token) {
-        if (token.dep == 'ROOT') rootId = token.id;
-      });
-
-      // create tokenNodes
-      var importSubtree = function(token) {
-        self.tokenNodes.push(new TokenNode(self, token))
-        token.child_ids.forEach(function(childId) {
-          importSubtree(tokens[childId])
-        });
-      };
-      importSubtree(tokens[rootId]);
-
-      self.root = self.getTokenNode(rootId);
-    }
-    // remove additional nodes
-    self.nodes.getIds().forEach(function(id) {
-      if (!self.getTokenNode(id)) {
-        self.nodes.remove(id);
-      }
+  // GENERATE TOKENNODES FROM TOKENS, render
+  self.importSubtree = function(tokens, token) {
+    tokenNode = new TokenNode(self, token);
+    self.tokenNodes.push(tokenNode);
+    token.child_ids.forEach(function(childId) {
+      self.importSubtree(tokens, tokens[childId])
     });
   }
 
-  // RENDER TOKENNODES
-  self.render = function(tokenNode=self.root) {
-    if (tokenNode) {
-      tokenNode.render();
-      tokenNode.children.forEach(function(child) {
-        self.render(child)
-      })
-    }
+  self.renderSubtree = function(tokenNode) {
+    tokenNode.render();
+    tokenNode.children.forEach(function(child) {
+      self.renderSubtree(child);
+    });
   }
-
   //// BELONS HERE
   // PROCESS QUERY, DISPLAY RESULTS
   self.process = function(query) {
+    console.log('process')
     fetch('/parse?query=' + query)
     .then(function(response) {
       return response.json();
     })
     .then(function(tokens) {
-      self.import(tokens);
-      self.render();
+      self.tokenNodes = []
+      tokens.forEach(function(token) {
+        if (token.dep == 'ROOT') {
+          self.importSubtree(tokens, token);
+          self.renderSubtree(self.getTokenNode(token.id));
+        }
+      });
+
+      // remove additional nodes
+      self.nodes.getIds().forEach(function(id) {
+        if (!self.getTokenNode(id)) {
+          self.nodes.remove(id);
+        }
+      });
     });
   };
 
@@ -85,7 +68,7 @@ var ParseTree = function() {
     if (properties.nodes.length > 0) {
       tokenNode = self.getTokenNode(properties.nodes[0]);
       tokenNode.collapsed = !tokenNode.collapsed;
-      self.render();
+      self.renderSubtree(tokenNode);
     }
   });
 }
