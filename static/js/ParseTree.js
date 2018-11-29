@@ -7,7 +7,7 @@ var ParseTree = function() {
   self.tokenNodes = []
   self.root = null;
 
-  var container = document.getElementById('visual');
+  var container = document.getElementById('visualization');
   var data = {nodes: self.nodes, edges: self.edges};
   var options = {};
   self.network = new vis.Network(container, data, options);
@@ -15,6 +15,7 @@ var ParseTree = function() {
   self.tokens = [];
   self.root = undefined;
 
+  //// DOESN'T BELONG
   // RETURN TOKENNODE BY ID
   self.getTokenNode = function(id) {
     var match = null;
@@ -24,6 +25,7 @@ var ParseTree = function() {
     return match;
   }
 
+  //// SORTA BELONGS
   // TURN TOKENS INTO TOKENNODES
   self.import = function(tokens) {
     self.tokenNodes = [];
@@ -64,6 +66,7 @@ var ParseTree = function() {
     }
   }
 
+  //// BELONS HERE
   // PROCESS QUERY, DISPLAY RESULTS
   self.process = function(query) {
     fetch('/parse?query=' + query)
@@ -76,6 +79,7 @@ var ParseTree = function() {
     });
   };
 
+  //// BELONGS HERE
   // COLLAPSE SUBTREE WHEN CLICKED
   self.network.on('click', function(properties) {
     if (properties.nodes.length > 0) {

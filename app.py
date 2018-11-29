@@ -28,7 +28,6 @@ def parse():
             'collapsed_text': ' '.join([token.text for token in token.subtree]),
             'child_ids': [child.i for child in token.children]
         }]
-    print([token.dep_ for token in nlp('This is a dependency-based parse tree. Click, hover and type to explore!')])
     return jsonify(tokens)
 
 if __name__ == "__main__":
