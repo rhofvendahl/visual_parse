@@ -17,7 +17,7 @@ tagDescriptions = {
   'BES': '(BES) auxiliary "be"',
   'CC': '(CC) conjunction, coordinating',
   'CD': '(CD) cardinal number',
-  'DT': '(DT) ',
+  'DT': '(DT) determiner',
   'EX': '(EX) existential there',
   'FW': '(FW) foreign word',
   'GW': '(GW) additional word in multi-word expression',
