@@ -1,10 +1,56 @@
 window.onload = function() {
   parseTree = new ParseTree();
+  visual = new Visual();
 
   var input = document.getElementById('query');
   console.log(input);
   console.log(input.value);
-  parseTree.process(input.value);
+
+  var experimental = false;
+
+  function update(text) {
+      console.log('Main: updating...')
+      if (experimental) {
+          fetch('/parse_experimental', {
+              method: 'post',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  text: text
+              })
+          }).then(function(response) {
+              return response.json();
+          }).then(function(json) {
+              console.log(json);
+              parseTree.update(json.tokens);
+              visual.update(json.model);
+          }).then(function() {
+              console.log('Main: update complete.')
+          });
+      } else {
+          fetch('/parse', {
+              method: 'post',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  text: text
+              })
+          }).then(function(response) {
+              return response.json();
+          }).then(function(json) {
+              console.log(json);
+              parseTree.update(json.tokens);
+          }).then(function() {
+              console.log('Main: update complete.')
+          });
+      }
+  }
+
+  update(input.value)
 
   input.focus();
   input.selectionStart = input.value.length;
