@@ -16,6 +16,16 @@ var TokenNode = function(parseTree, token) {
   // collapse noun chunks, hide subtree if collapsed
   self.collapsed = token.noun_chunk_head;
 
+//   // collapse noun chunks, hide subtree if collapsed
+// self.collapsed = (
+//   token.noun_chunk_head ||
+//   token.dep == 'xcomp' ||
+//   token.dep == 'acomp' ||
+//   token.dep == 'ccomp' ||
+//   token.dep == 'advcl' ||
+//   token.dep == 'prep'
+// );
+
   // set head, children
   self.head = parseTree.getTokenNode(self.headId);
   self.children = [];

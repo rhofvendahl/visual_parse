@@ -46,3 +46,31 @@ svg {
   font-size: 56px;
   color: lightgrey;
 }
+
+/* html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+}
+
+#page {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 30%;
+  background-color:  whitesmoke;
+  outline: 0px;
+  resize: none;
+  border: 0px;
+  padding: 0px;
+}
+
+#visual {
+  position: absolute;
+  left: calc(20px + 30%);
+  right: 0;
+  height: 100%;
+} */

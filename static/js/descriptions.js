@@ -1,4 +1,4 @@
-// SOURCE:
+// ADAPTED FROM:
 // https://spacy.io/api/annotation
 
 tagDescriptions = {
