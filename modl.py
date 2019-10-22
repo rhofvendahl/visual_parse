@@ -11,9 +11,9 @@ Span.set_extension('entity_id', default=None, force=True)
 archive = load_event2mind_archive('data/event2mind.tar.gz')
 event2mind_predictor = Predictor.from_archive(archive)
 
-print('loading en_coref_md...')
+print('Loading en_coref_md...')
 nlp = spacy.load('en_coref_md')
-print('done')
+print('Done.')
 
 class Entity:
     def __init__(self, id_, text, class_):

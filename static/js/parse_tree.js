@@ -39,7 +39,7 @@ var ParseTree = function() {
 
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
-    self.update = function(tokens) {
+    self.render = function(tokens) {
         console.log('ParseTree: updating...')
         self.tokenNodes = []
         tokens.forEach(function(token) {

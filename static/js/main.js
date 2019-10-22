@@ -24,8 +24,8 @@ window.onload = function() {
               return response.json();
           }).then(function(json) {
               console.log(json);
-              parseTree.update(json.tokens);
-              visual.update(json.model);
+              parseTree.render(json.tokens);
+              visual.render(json.model);
           }).then(function() {
               console.log('Main: update complete.')
           });
@@ -43,7 +43,7 @@ window.onload = function() {
               return response.json();
           }).then(function(json) {
               console.log(json);
-              parseTree.update(json.tokens);
+              parseTree.render(json.tokens);
           }).then(function() {
               console.log('Main: update complete.')
           });

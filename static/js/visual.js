@@ -40,7 +40,7 @@ var Visual = function() {
     // }
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
-    self.update = function(model) {
+    self.render = function(model) {
         console.log('Visual: updating...')
             var node_ids = []
 
