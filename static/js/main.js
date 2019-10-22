@@ -2,6 +2,8 @@ window.onload = function() {
   parseTree = new ParseTree();
 
   var input = document.getElementById('query');
+  console.log(input);
+  console.log(input.value);
   parseTree.process(input.value);
 
   input.focus();
