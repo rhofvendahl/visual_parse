@@ -1,4 +1,9 @@
-window.onload = function() {
+$(document).ready(function() {
+    $(".panel-left").resizable({
+        handleSelector: ".splitter",
+        resizeHeight: false
+    });
+    
     parseTree = new ParseTree();
     experiment = new Experiment();
 
@@ -74,7 +79,7 @@ window.onload = function() {
     setInterval(function() {
         if (timeOuts > 1) update(input.value)
     }, 100);
-}
+});
 
 // window.onload = function() {
 //   visual = new Visual();

@@ -1,46 +1,61 @@
 <!doctype html>
 <html>
 <head>
-  <title>visualParse</title>
+    <title>visualParse</title>
 
-  <link href='static/css/lib/vis-network.min.css' rel='stylesheet' type='text/css' />
-  <link href='static/css/stylesheet.css' rel='stylesheet' type='text/css' />
-  <link rel='shortcut icon' href='static/img/favicon.ico'>
+    <link href='static/css/lib/vis-network.min.css' rel='stylesheet' type='text/css' />
+    <link href='static/css/stylesheet.css' rel='stylesheet' type='text/css' />
+    <link rel='shortcut icon' href='static/img/favicon.ico'>
 
-  <script type='text/javascript' src='static/js/lib/vis-network.min.js'></script>
-  <script type='text/javascript' src='static/js/descriptions.js'></script>
-  <script type='text/javascript' src='static/js/token_node.js'></script>
-  <script type='text/javascript' src='static/js/parse_tree.js'></script>
-  <script type='text/javascript' src='static/js/experiment.js'></script>
-  <script type='text/javascript' src='static/js/main.js'></script>
+    <script type='text/javascript' src='static/js/lib/vis-network.min.js'></script>
+    <script type='text/javascript' src='static/js/lib/jquery-3.4.1.min.js'></script>
+    <script type='text/javascript' src='static/js/lib/jquery-resizable.js'></script>
+    <script type='text/javascript' src='static/js/descriptions.js'></script>
+    <script type='text/javascript' src='static/js/token_node.js'></script>
+    <script type='text/javascript' src='static/js/parse_tree.js'></script>
+    <script type='text/javascript' src='static/js/experiment.js'></script>
+    <script type='text/javascript' src='static/js/main.js'></script>
 </head>
 
 <body>
-  <div id='parse-tree'></div>
-  <div id='about'>about</div>
-  <div id='footer'>
-    <div id='title'><span id='visual'>visual</span><span id='parse'>Parse</span></div>
-    <input id='text' type='text' value=''>
-  </div>
-  
-  <div id='experiment'></div>
+    <div class='page-container'>
+        <div class='panel-container'>
+            <div class='panel-left' id='normal'>
+                <div id='parse-tree'></div>
+                <div id='about'>about</div>
+                <div id='footer'>
+                    <div id='title'><span id='visual'>visual</span><span id='parse'>Parse</span></div>
+                    <input id='text' type='text' value=''>
+                </div>
+            </div>
+
+            <div class='splitter'>
+            </div>
+
+
+            <div class='panel-right' id='experimental'>
+                <div id='experiment'></div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
 
-<!-- <!doctype html>
-<html>
-<head>
-  <title>modl</title>
+    <!-- <!doctype html>
+    <html>
+    <head>
+    <title>modl</title>
 
-  <link href='static/css/lib/vis-network.min.css' rel='stylesheet' type='text/css' />
-  <link href='static/css/style.css' rel='stylesheet' type='text/css' />
-  <link rel='shortcut icon' href='static/img/favicon.ico'>
+    <link href='static/css/lib/vis-network.min.css' rel='stylesheet' type='text/css' />
+    <link href='static/css/style.css' rel='stylesheet' type='text/css' />
+    <link rel='shortcut icon' href='static/img/favicon.ico'>
 
-  <script type='text/javascript' src='static/js/lib/vis-network.min.js'></script>
-  <script type='text/javascript' src='static/js/Visual.js'></script>
-  <script type='text/javascript' src='static/js/main.js'></script>
+    <script type='text/javascript' src='static/js/lib/vis-network.min.js'></script>
+    <script type='text/javascript' src='static/js/Visual.js'></script>
+    <script type='text/javascript' src='static/js/main.js'></script>
 </head>
 
 <body>
-  <textarea id='page'></textarea>
-  <div id='visual'></div>
+<textarea id='page'></textarea>
+<div id='visual'></div>
 </html> -->

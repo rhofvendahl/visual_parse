@@ -13,7 +13,7 @@ event2mind_predictor = Predictor.from_archive(archive)
 
 print('Loading en_coref_md...')
 nlp = spacy.load('en_coref_md')
-print('Done.')
+print('Load complete.')
 
 class Entity:
     def __init__(self, id_, text, class_):
@@ -32,7 +32,6 @@ class Statement:
 
         self.statement_text = self.get_statement_text()
         self.keyphrase_text = self.get_keyphrase_text()
-        print('source at source is ', source)
         self.source = source
 
     def get_statement_text(self):
@@ -75,7 +74,6 @@ class Model:
 
         # create entities for the rest of the noun chunks
         for noun_chunk in self.noun_chunks:
-            print('noun_chunk_entity_id_is', noun_chunk._.entity_id)
             if noun_chunk._.entity_id == None:
                 entity = Entity(id_=len(self.entities), text=noun_chunk.text, class_='THINGfromnchunk')
                 # print('noun chunk to entity', entity.text, entity.class_)
@@ -111,7 +109,6 @@ class Model:
         return None
 
     def get_or_create_statement(self, subject_text, predicate_text, subject_id=None, object_text=None, object_id=None, source=None):
-        print('source is ', source)
         for s in self.statements:
             if s.subject_text == subject_text and s.subject_id == subject_id and s.predicate_text == predicate_text and s.object_text == object_text and s.object_id == object_id:
                 return s

@@ -4,7 +4,10 @@ from modl import Model
 app = Flask(__name__)
 
 import spacy
+print('Loading en_core_web_sm...')
 nlp = spacy.load('en_core_web_sm')
+print('Load complete.')
+
 
 @app.route('/')
 def index():
