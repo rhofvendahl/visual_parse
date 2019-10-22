@@ -11,6 +11,13 @@ var ParseTree = function() {
 
     self.tokenNodes = []
 
+    self.fit = function() {
+        var fitOptions = {
+            nodes: self.nodes.getIds()
+        };
+        self.network.fit(fitOptions);
+    };
+
     //// DOESN'T BELONG
     // RETURN TOKENNODE BY ID
     self.getTokenNode = function(id) {

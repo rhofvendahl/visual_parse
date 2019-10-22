@@ -9,6 +9,13 @@ var Experiment = function() {
     var options = {};
     self.network = new vis.Network(container, data, options);
 
+    self.fit = function() {
+        var fitOptions = {
+            nodes: self.nodes.getIds()
+        };
+        self.network.fit(fitOptions);
+    };
+
     // self.tokenNodes = []
     //
     // //// DOESN'T BELONG

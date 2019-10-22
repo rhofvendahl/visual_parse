@@ -4,19 +4,18 @@ $(document).ready(function() {
         resizeHeight: false
     });
 
-    $( '#normal' ).animate({
-        width: '50%'
-    }, 2000, function() {
-        // Animation complete.
-    });
-
     parseTree = new ParseTree();
+
     experiment = new Experiment();
+    experiment.fit();
 
     var input = document.getElementById('text');
     input.value = 'This is a dependency parse tree. Click, hover and type to explore!';
+    input.focus();
+    input.selectionStart = input.value.length;
+    input.selectionEnd = input.value.length;
 
-    var experimental = false;
+    var experimental = true;
 
     function update(text) {
         console.log('Main: updating...')
@@ -60,11 +59,17 @@ $(document).ready(function() {
         }
     }
 
-    update(input.value)
-
-    input.focus();
-    input.selectionStart = input.value.length;
-    input.selectionEnd = input.value.length;
+    window.setTimeout(update, 1700, input.value);
+    $('#normal').animate({
+        width: '60%'
+    }, 2000, function() {
+        // update(input.value)
+        experiment.fit();
+        // parseTree.fit();
+        // experiment.network.redraw();
+        // parseTree.network.redraw();
+        // TODO: check 'experimental' box
+    });
 
     // don't update constantly if timeOuts overlap
     var timeOuts = 0;

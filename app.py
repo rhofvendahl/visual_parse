@@ -20,7 +20,7 @@ def parse():
 
     doc = nlp(content['text'])
     noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
-    tokens_list = [{
+    token_list = [{
         'id': token.i,
         'text': token.text,
         'tag': token.tag_,
@@ -33,7 +33,7 @@ def parse():
     } for token in doc]
 
     return jsonify({
-        'tokens': tokens_list
+        'tokens': token_list
     })
 
 @app.route('/parse_experimental', methods = ['POST'])
@@ -42,7 +42,7 @@ def model():
 
     doc = nlp(content['text'])
     noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
-    tokens_list = [{
+    token_list = [{
         'id': token.i,
         'text': token.text,
         'tag': token.tag_,
