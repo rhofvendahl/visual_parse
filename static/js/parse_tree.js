@@ -4,7 +4,7 @@ var ParseTree = function() {
     self.nodes = new vis.DataSet();
     self.edges = new vis.DataSet();
 
-    var container = document.getElementById('visualization');
+    var container = document.getElementById('parse-tree');
     var data = {nodes: self.nodes, edges: self.edges};
     var options = {};
     self.network = new vis.Network(container, data, options);
@@ -40,7 +40,7 @@ var ParseTree = function() {
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
     self.render = function(tokens) {
-        console.log('ParseTree: updating...')
+        console.log('ParseTree: rendering...')
         self.tokenNodes = []
         tokens.forEach(function(token) {
             if (token.dep == 'ROOT') {
@@ -55,7 +55,7 @@ var ParseTree = function() {
                 self.nodes.remove(id);
             }
         });
-        console.log('ParseTree: update complete.')
+        console.log('ParseTree: render complete.')
     };
 
     //// BELONGS HERE

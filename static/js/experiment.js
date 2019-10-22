@@ -1,10 +1,10 @@
-var Visual = function() {
+var Experiment = function() {
     var self = this;
 
     self.nodes = new vis.DataSet();
     self.edges = new vis.DataSet();
 
-    var container = document.getElementById('visual');
+    var container = document.getElementById('experiment');
     var data = {nodes: self.nodes, edges: self.edges};
     var options = {};
     self.network = new vis.Network(container, data, options);
@@ -41,7 +41,7 @@ var Visual = function() {
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
     self.render = function(model) {
-        console.log('Visual: updating...')
+        console.log('Experiment: rendering...')
             var node_ids = []
 
         // create reference entities
@@ -145,7 +145,7 @@ var Visual = function() {
                 self.nodes.remove(id);
             }
         });
-        console.log('Visual: update complete.')
+        console.log('Experiment: render complete.')
         // TODO: make it so it chains requests if dirty
     };
 

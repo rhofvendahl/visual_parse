@@ -1,80 +1,79 @@
 window.onload = function() {
-  parseTree = new ParseTree();
-  visual = new Visual();
+    parseTree = new ParseTree();
+    experiment = new Experiment();
 
-  var input = document.getElementById('query');
-  console.log(input);
-  console.log(input.value);
+    var input = document.getElementById('text');
+    input.value = 'This is a dependency parse tree. Click, hover and type to explore!';
 
-  var experimental = false;
+    var experimental = false;
 
-  function update(text) {
-      console.log('Main: updating...')
-      if (experimental) {
-          fetch('/parse_experimental', {
-              method: 'post',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  text: text
-              })
-          }).then(function(response) {
-              return response.json();
-          }).then(function(json) {
-              console.log(json);
-              parseTree.render(json.tokens);
-              visual.render(json.model);
-          }).then(function() {
-              console.log('Main: update complete.')
-          });
-      } else {
-          fetch('/parse', {
-              method: 'post',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  text: text
-              })
-          }).then(function(response) {
-              return response.json();
-          }).then(function(json) {
-              console.log(json);
-              parseTree.render(json.tokens);
-          }).then(function() {
-              console.log('Main: update complete.')
-          });
-      }
-  }
-
-  update(input.value)
-
-  input.focus();
-  input.selectionStart = input.value.length;
-  input.selectionEnd = input.value.length;
-
-  // don't update constantly if timeOuts overlap
-  var timeOuts = 0;
-  document.oninput = function(event) {
-    var updated = false;
-    if (timeOuts == 0) {
-      parseTree.process(input.value);
-      var updated = true;
+    function update(text) {
+        console.log('Main: updating...')
+        if (experimental) {
+            fetch('/parse_experimental', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(json) {
+                console.log(json);
+                parseTree.render(json.tokens);
+                experiment.render(json.model);
+            }).then(function() {
+                console.log('Main: update complete.')
+            });
+        } else {
+            fetch('/parse', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: text
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(json) {
+                console.log(json);
+                parseTree.render(json.tokens);
+            }).then(function() {
+                console.log('Main: update complete.')
+            });
+        }
     }
-    timeOuts += 1
-    setTimeout(function() {
-      timeOuts -= 1;
-      if (timeOuts == 0 && !updated) parseTree.process(input.value);
-    }, 100)
-  };
 
-  // update at intervals if timeOuts overlap
-  setInterval(function() {
-    if (timeOuts > 1) parseTree.process(input.value)
-  }, 100);
+    update(input.value)
+
+    input.focus();
+    input.selectionStart = input.value.length;
+    input.selectionEnd = input.value.length;
+
+    // don't update constantly if timeOuts overlap
+    var timeOuts = 0;
+    document.oninput = function(event) {
+        var updated = false;
+        if (timeOuts == 0) {
+            update(input.value);
+            var updated = true;
+        }
+        timeOuts += 1
+        setTimeout(function() {
+            timeOuts -= 1;
+            if (timeOuts == 0 && !updated) update(input.value);
+        }, 100)
+    };
+
+    // update at intervals if timeOuts overlap
+    setInterval(function() {
+        if (timeOuts > 1) update(input.value)
+    }, 100);
 }
 
 // window.onload = function() {
