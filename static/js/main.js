@@ -1,9 +1,15 @@
 $(document).ready(function() {
-    $(".panel-left").resizable({
-        handleSelector: ".splitter",
+    $('.panel-left').resizable({
+        handleSelector: '.splitter',
         resizeHeight: false
     });
-    
+
+    $( '#normal' ).animate({
+        width: '50%'
+    }, 2000, function() {
+        // Animation complete.
+    });
+
     parseTree = new ParseTree();
     experiment = new Experiment();
 
