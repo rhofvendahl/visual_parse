@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('.panel-left').resizable({
+    $('#normal').resizable({
         handleSelector: '.splitter',
         resizeHeight: false
     });
@@ -9,87 +9,114 @@ $(document).ready(function() {
     experiment = new Experiment();
     experiment.fit();
 
-    var input = document.getElementById('text');
-    input.value = 'This is a dependency parse tree. Click, hover and type to explore!';
+    var input = $('#text');
+    input.val('This is a dependency parse tree. Click, hover and type to explore!');
+    console.log(input.val());
     input.focus();
-    input.selectionStart = input.value.length;
-    input.selectionEnd = input.value.length;
+    input.prop('selectionStart', input.val().length);
+    input.prop('selectionEnd', input.val().length);
 
-    var experimental = true;
-
-    function update(text) {
-        console.log('Main: updating...')
-        if (experimental) {
-            fetch('/parse_experimental', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    text: text
-                })
-            }).then(function(response) {
-                return response.json();
-            }).then(function(json) {
-                console.log(json);
-                parseTree.render(json.tokens);
-                experiment.render(json.model);
-            }).then(function() {
-                console.log('Main: update complete.')
-            });
-        } else {
-            fetch('/parse', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    text: text
-                })
-            }).then(function(response) {
-                return response.json();
-            }).then(function(json) {
-                console.log(json);
-                parseTree.render(json.tokens);
-            }).then(function() {
-                console.log('Main: update complete.')
-            });
-        }
+    function updateParseTree(text) {
+        // console.log('Main: updating (ParseTree)...')
+        fetch('/parse', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: text
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(json) {
+            // console.log(json);
+            parseTree.render(json.tokens);
+        }).then(function() {
+            // console.log('Main: update complete.')
+        });
     }
 
-    window.setTimeout(update, 1700, input.value);
+    function updateExperiment(text) {
+        // console.log('Main: updating (Experiment)...')
+        fetch('/parse_experimental_only', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: text
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(json) {
+            // console.log(json);
+            experiment.render(json.model);
+        }).then(function() {
+            // console.log('Main: update complete.')
+        });
+    }
+
+    function updateAll(text) {
+        // console.log('Main: updating (all)...')
+        fetch('/parse_experimental_also', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: text
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(json) {
+            // console.log(json);
+            parseTree.render(json.tokens);
+            experiment.render(json.model);
+        }).then(function() {
+            // console.log('Main: update complete.')
+        });
+    }
+
+    setTimeout(updateAll, 1700, input.val());
     $('#normal').animate({
         width: '60%'
     }, 2000, function() {
         // update(input.value)
         experiment.fit();
-        // parseTree.fit();
+        parseTree.fit();
         // experiment.network.redraw();
         // parseTree.network.redraw();
         // TODO: check 'experimental' box
     });
 
-    // don't update constantly if timeOuts overlap
-    var timeOuts = 0;
-    document.oninput = function(event) {
+    // ensures updates aren't constant while user types
+    var activeTimeouts = 0;
+    input.on('input', function(event) {
         var updated = false;
-        if (timeOuts == 0) {
-            update(input.value);
+        if (activeTimeouts == 0) {
+            updateAll(input.val()); // executes at start of typing session
+            console.log('User starts typing.');
             var updated = true;
         }
-        timeOuts += 1
+        activeTimeouts += 1
         setTimeout(function() {
-            timeOuts -= 1;
-            if (timeOuts == 0 && !updated) update(input.value);
-        }, 100)
-    };
+            activeTimeouts -= 1;
+            if (activeTimeouts == 0 && !updated) {
+                updateAll(input.val()); // executes to cap off typing session
+                console.log('User stops typing.');
+            }
+        }, 1000)
+    });
 
-    // update at intervals if timeOuts overlap
     setInterval(function() {
-        if (timeOuts > 1) update(input.value)
-    }, 100);
+        if (activeTimeouts > 1) {
+            updateParseTree(input.val()) // executes at intervals during typing session
+            console.log('User is typing.');
+        }
+    }, 200);
 });
 
 // window.onload = function() {

@@ -8,53 +8,24 @@ print('Loading en_core_web_sm...')
 nlp = spacy.load('en_core_web_sm')
 print('Load complete.')
 
+model = Model()
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/parse', methods=['POST'])
-def parse():
-    content = request.get_json()
-
-
-    doc = nlp(content['text'])
-    noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
+def get_token_list(doc_instance):
+    noun_chunk_tokens = [chunk.root for chunk in doc_instance.noun_chunks]
     token_list = [{
-        'id': token.i,
-        'text': token.text,
-        'tag': token.tag_,
-        'pos': token.pos_,
-        'head_id': token.head.i,
-        'dep': token.dep_,
-        'noun_chunk_head': token in noun_chunk_tokens,
-        'collapsed_text': ' '.join([token.text for token in token.subtree]),
-        'child_ids': [child.i for child in token.children]
-    } for token in doc]
+            'id': token.i,
+            'text': token.text,
+            'tag': token.tag_,
+            'pos': token.pos_,
+            'head_id': token.head.i,
+            'dep': token.dep_,
+            'noun_chunk_head': token in noun_chunk_tokens,
+            'collapsed_text': ' '.join([token.text for token in token.subtree]),
+            'child_ids': [child.i for child in token.children]
+        } for token in doc_instance]
+    return token_list
 
-    return jsonify({
-        'tokens': token_list
-    })
-
-@app.route('/parse_experimental', methods = ['POST'])
-def model():
-    content = request.get_json()
-
-    doc = nlp(content['text'])
-    noun_chunk_tokens = [chunk.root for chunk in doc.noun_chunks]
-    token_list = [{
-        'id': token.i,
-        'text': token.text,
-        'tag': token.tag_,
-        'pos': token.pos_,
-        'head_id': token.head.i,
-        'dep': token.dep_,
-        'noun_chunk_head': token in noun_chunk_tokens,
-        'collapsed_text': ' '.join([token.text for token in token.subtree]),
-        'child_ids': [child.i for child in token.children]
-    } for token in doc]
-
-    model = Model(content['text'])
+def get_model_dict(model_instance):
     model_dict = {
         'entities': [{
             'id': entity.id,
@@ -78,11 +49,41 @@ def model():
             'from': inference.from_,
             'weight': inference.weight,
             'source': inference.source
-        } for inference in model.inferences]
+        } for inference in model_instance.inferences]
     }
+    return model_dict
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/parse', methods=['POST'])
+def parse():
+    content = request.get_json()
+    doc = nlp(content['text'])
+
     return jsonify({
-        'tokens': token_list,
-        'model': model_dict
+        'tokens': get_token_list(doc)
+    })
+
+@app.route('/parse_experimental_also', methods = ['POST'])
+def parse_experimental_also():
+    content = request.get_json()
+    model.process(content['text'])
+    doc = model.doc
+
+    return jsonify({
+        'tokens': get_token_list(doc),
+        'model': get_model_dict(model)
+    })
+
+@app.route('/parse_experimental_only', methods = ['POST'])
+def parse_experimental_only():
+    content = request.get_json()
+    model.process(content['text'])
+
+    return jsonify({
+        'model': get_model_dict(model)
     })
 
 if __name__ == "__main__":

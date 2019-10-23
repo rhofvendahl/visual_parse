@@ -48,7 +48,7 @@ var Experiment = function() {
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
     self.render = function(model) {
-        console.log('Experiment: rendering...')
+        // console.log('Experiment: rendering...')
             var node_ids = []
 
         // create reference entities
@@ -64,7 +64,7 @@ var Experiment = function() {
 
         // create propositions
         model.statements.forEach(function(statement) {
-            console.log(statement.source)
+            // console.log(statement.source)
             if (statement.source == 'extractor') {
                 node_ids.push('s' + statement.id);
                 self.nodes.update({
@@ -86,7 +86,7 @@ var Experiment = function() {
         model.inferences.forEach(function(inference) {
             if (inference.weight > .04) {
                 e2m_statement = undefined
-                json.model.statements.forEach(function(statement) {
+                model.statements.forEach(function(statement) {
                     if (statement.id == inference.to) {
                         e2m_statement = statement
                     }
@@ -152,7 +152,7 @@ var Experiment = function() {
                 self.nodes.remove(id);
             }
         });
-        console.log('Experiment: render complete.')
+        // console.log('Experiment: render complete.')
         // TODO: make it so it chains requests if dirty
     };
 

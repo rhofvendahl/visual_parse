@@ -55,7 +55,10 @@ class Inference:
 
 # memoryless for now; each change to text means a whole new model
 class Model:
-    def __init__(self, text):
+    def __init__(self):
+        pass
+        
+    def process(self, text):
         self.raw = text
         preprocessed = textacy.preprocess.normalize_whitespace(text)
         preprocessed = textacy.preprocess.fix_bad_unicode(preprocessed)
@@ -87,7 +90,6 @@ class Model:
 
         self.inferences = []
         self.generate_event2mind_statements()
-
 
     def get_entity_refs(self, entity_id):
         entity_refs = []

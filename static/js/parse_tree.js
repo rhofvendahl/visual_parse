@@ -47,7 +47,7 @@ var ParseTree = function() {
     //// BELONS HERE
     // PROCESS QUERY, DISPLAY RESULTS
     self.render = function(tokens) {
-        console.log('ParseTree: rendering...')
+        // console.log('ParseTree: rendering...')
         self.tokenNodes = []
         tokens.forEach(function(token) {
             if (token.dep == 'ROOT') {
@@ -62,7 +62,7 @@ var ParseTree = function() {
                 self.nodes.remove(id);
             }
         });
-        console.log('ParseTree: render complete.')
+        // console.log('ParseTree: render complete.')
     };
 
     //// BELONGS HERE
