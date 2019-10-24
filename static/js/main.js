@@ -12,11 +12,11 @@ $(document).ready(function() {
 
     updateManager = new UpdateManager(input);
 
-    setTimeout(updateManager.startUpdating, 1700, input.val());
+    updateManager.startUpdating(false);
+    setTimeout(updateManager.startUpdating, 1700);
     $('#normal').animate({
         width: '60%'
     }, 2000, function() {
         updateManager.experiment.fit();
-        updateManager.parseTree.fit();
     });
 });

@@ -9,7 +9,7 @@ var UpdateManager = function(input) {
     self.dirty = false;
     self.updating = false;
 
-    self.startUpdating = function() {
+    self.startUpdating = function(experimental=true) {
         self.updating = true;
         self.dirty = false;
         fetch('/parse', {
@@ -30,13 +30,13 @@ var UpdateManager = function(input) {
             if (self.dirty)  {
                 self.startUpdating();
             } else {
-                self.finishUpdating();
+                self.updating = false;
             }
+            if (experimental) self.updateExperiment();
         });
     }
 
-    self.finishUpdating = function() {
-        self.updating = false;
+    self.updateExperiment = function() {
         fetch('/parse_experimental_only', {
             method: 'post',
             headers: {
