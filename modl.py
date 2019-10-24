@@ -57,7 +57,7 @@ class Inference:
 class Model:
     def __init__(self):
         pass
-        
+
     def process(self, text):
         self.raw = text
         preprocessed = textacy.preprocess.normalize_whitespace(text)
