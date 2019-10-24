@@ -1,8 +1,8 @@
 # Requirements (WIP)
 (requires python3, pip, venv; instructions presume linux)
 ```
-git clone https://github.com/rhofvendahl/modl
-cd modl
+git clone https://github.com/rhofvendahl/visual_parse
+cd visual_parse
 python3 -m venv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
