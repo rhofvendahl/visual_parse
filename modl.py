@@ -12,7 +12,9 @@ archive = load_event2mind_archive('data/event2mind.tar.gz')
 event2mind_predictor = Predictor.from_archive(archive)
 
 print('Loading en_coref_md...')
+# print('Loading en_core_web_sm')
 nlp = spacy.load('en_coref_md')
+# nlp = spacy.load('en_core_web_md')
 print('Load complete.')
 
 class Entity:
