@@ -1,15 +1,15 @@
 import spacy
 from spacy.tokens import Span # Doc, Span, Token
 import textacy
-# from event2mind_hack import load_event2mind_archive
-# from allennlp.predictors.predictor import Predictor
+from event2mind_hack import load_event2mind_archive
+from allennlp.predictors.predictor import Predictor
 import math
 import re
 
 Span.set_extension('entity_id', default=None, force=True)
 
-# archive = load_event2mind_archive('data/event2mind.tar.gz')
-# event2mind_predictor = Predictor.from_archive(archive)
+archive = load_event2mind_archive('data/event2mind.tar.gz')
+event2mind_predictor = Predictor.from_archive(archive)
 
 print('Loading en_coref_sm...')
 nlp = spacy.load('en_coref_sm')
@@ -89,7 +89,7 @@ class Model:
             self.extract_statements(sent)
 
         self.inferences = []
-        # self.generate_event2mind_statements()
+        self.generate_event2mind_statements()
 
     def get_entity_refs(self, entity_id):
         entity_refs = []
