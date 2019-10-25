@@ -1,3 +1,139 @@
+#############################################################
+import os
+_proc_status = '/proc/%d/status' % os.getpid()
+
+_scale = {'kB': 1024.0, 'mB': 1024.0*1024.0,
+          'KB': 1024.0, 'MB': 1024.0*1024.0}
+
+def _VmB(VmKey):
+    '''Private.
+    '''
+    global _proc_status, _scale
+     # get pseudo file  /proc/<pid>/status
+    try:
+        t = open(_proc_status)
+        v = t.read()
+        t.close()
+    except:
+        return 0.0  # non-Linux?
+     # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
+    i = v.index(VmKey)
+    v = v[i:].split(None, 3)  # whitespace
+    if len(v) < 3:
+        return 0.0  # invalid format?
+     # convert Vm value to bytes    global _proc_status, _scale
+
+    return float(v[1]) * _scale[v[2]]
+
+
+def memory(since=0.0):
+    '''Return memory usage in bytes.
+    '''
+    return _VmB('VmSize:') - since
+
+
+def resident(since=0.0):
+    '''Return resident memory usage in bytes.
+    '''
+    return _VmB('VmRSS:') - since
+
+
+def stacksize(since=0.0):
+    '''Return stack size in bytes.
+    '''
+    return _VmB('VmStk:') - since
+    ################################################################
+
+import logging
+import os
+from typing import Dict, Union, List, Set, Optional, Tuple, NamedTuple, Any
+print('pre numpy:', memory() / 1000000, "MB")
+
+import numpy
+print('post numpy, pre torch:', memory() / 1000000, "MB")
+
+# import torch
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+
+# from torch import no_grad
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import Tensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import load
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import LongTensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import long
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import FloatTensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import no_grad, Tensor, load, LongTensor, long, FloatTensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import no_grad, Tensor, load, LongTensor, long, FloatTensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")# import torch
+from torch import no_grad, Tensor, load, LongTensor, long, FloatTensor
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+from torch.nn import Module, ModuleDict
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+from torch.nn.modules.rnn import GRUCell
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+from torch.nn.modules.linear import Linear
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+from torch import nn
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+import torch.nn.functional as F
+print('post torch, pre allennlp stuff:', memory() / 1000000, "MB")
+
+from allennlp.common.checks import ConfigurationError
+# from allennlp.common.params import Params
+from allennlp.common.registrable import Registrable
+from allennlp.data import Instance, Vocabulary
+from allennlp.data.dataset import Batch
+from allennlp.nn import util
+from allennlp.nn.regularizers import RegularizerApplicator
+
+#########################################################
+
+# from typing import Dict, List, Optional, Tuple
+
+# import numpy
+
+# import torch
+
+
+from allennlp.common.util import START_SYMBOL, END_SYMBOL
+# from allennlp.data.vocabulary import Vocabulary
+from allennlp.modules import Seq2VecEncoder, TextFieldEmbedder
+from allennlp.modules.token_embedders import Embedding
+# from allennlp.models.model import Model
+from allennlp.nn.beam_search import BeamSearch
+from allennlp.nn.util import get_text_field_mask, sequence_cross_entropy_with_logits
+from allennlp.training.metrics import UnigramRecall
+from allennlp.common.file_utils import cached_path
+from allennlp.common.params import Params, unflatten, with_fallback, parse_overrides
+from allennlp.models.model import _DEFAULT_WEIGHTS # Model, _DEFAULT_WEIGHTS
+
+print('post allennlp, pre other stuff:', memory() / 1000000, "MB")
+
+##############################################
+
+# from typing import NamedTuple, Dict, Any
+import json
+# import logging
+# import os
+import tempfile
+import tarfile
+import shutil
+
+from overrides import overrides
+
+
+############################################
 
 # from https://github.com/allenai/allennlp/blob/master/allennlp/models/model.py
 
@@ -6,20 +142,20 @@
 an AllenNLP model.
 """
 
-import logging
-import os
-from typing import Dict, Union, List, Set
-
-import numpy
-import torch
-
-from allennlp.common.checks import ConfigurationError
-from allennlp.common.params import Params
-from allennlp.common.registrable import Registrable
-from allennlp.data import Instance, Vocabulary
-from allennlp.data.dataset import Batch
-from allennlp.nn import util
-from allennlp.nn.regularizers import RegularizerApplicator
+# import logging
+# import os
+# from typing import Dict, Union, List, Set
+#
+# import numpy
+# # import torch
+#
+# from allennlp.common.checks import ConfigurationError
+# from allennlp.common.params import Params
+# from allennlp.common.registrable import Registrable
+# from allennlp.data import Instance, Vocabulary
+# from allennlp.data.dataset import Batch
+# from allennlp.nn import util
+# from allennlp.nn.regularizers import RegularizerApplicator
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -28,7 +164,8 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 _DEFAULT_WEIGHTS = "best.th"
 
 
-class Model(torch.nn.Module, Registrable):
+# class Model(torch.nn.Module, Registrable):
+class Model(Module, Registrable):
     """
     This abstract class represents a model to be trained. Rather than relying completely
     on the Pytorch Module, we modify the output spec of ``forward`` to be a dictionary.
@@ -55,58 +192,58 @@ class Model(torch.nn.Module, Registrable):
         self.vocab = vocab
         self._regularizer = regularizer
 
-    def get_regularization_penalty(self) -> Union[float, torch.Tensor]:
-        """
-        Computes the regularization penalty for the model.
-        Returns 0 if the model was not configured to use regularization.
-        """
-        if self._regularizer is None:
-            return 0.0
-        else:
-            return self._regularizer(self)
+    # def get_regularization_penalty(self) -> Union[float, torch.Tensor]:
+    #     """
+    #     Computes the regularization penalty for the model.
+    #     Returns 0 if the model was not configured to use regularization.
+    #     """
+    #     if self._regularizer is None:
+    #         return 0.0
+    #     else:
+    #         return self._regularizer(self)
 
-    def get_parameters_for_histogram_tensorboard_logging( # pylint: disable=invalid-name
-            self) -> List[str]:
-        """
-        Returns the name of model parameters used for logging histograms to tensorboard.
-        """
-        return [name for name, _ in self.named_parameters()]
+    # def get_parameters_for_histogram_tensorboard_logging( # pylint: disable=invalid-name
+    #         self) -> List[str]:
+    #     """
+    #     Returns the name of model parameters used for logging histograms to tensorboard.
+    #     """
+    #     return [name for name, _ in self.named_parameters()]
 
-    def forward(self, *inputs) -> Dict[str, torch.Tensor]:  # pylint: disable=arguments-differ
-        """
-        Defines the forward pass of the model. In addition, to facilitate easy training,
-        this method is designed to compute a loss function defined by a user.
-        The input is comprised of everything required to perform a
-        training update, `including` labels - you define the signature here!
-        It is down to the user to ensure that inference can be performed
-        without the presence of these labels. Hence, any inputs not available at
-        inference time should only be used inside a conditional block.
-        The intended sketch of this method is as follows::
-            def forward(self, input1, input2, targets=None):
-                ....
-                ....
-                output1 = self.layer1(input1)
-                output2 = self.layer2(input2)
-                output_dict = {"output1": output1, "output2": output2}
-                if targets is not None:
-                    # Function returning a scalar torch.Tensor, defined by the user.
-                    loss = self._compute_loss(output1, output2, targets)
-                    output_dict["loss"] = loss
-                return output_dict
-        Parameters
-        ----------
-        inputs:
-            Tensors comprising everything needed to perform a training update, `including` labels,
-            which should be optional (i.e have a default value of ``None``).  At inference time,
-            simply pass the relevant inputs, not including the labels.
-        Returns
-        -------
-        output_dict: ``Dict[str, torch.Tensor]``
-            The outputs from the model. In order to train a model using the
-            :class:`~allennlp.training.Trainer` api, you must provide a "loss" key pointing to a
-            scalar ``torch.Tensor`` representing the loss to be optimized.
-        """
-        raise NotImplementedError
+    # def forward(self, *inputs) -> Dict[str, torch.Tensor]:  # pylint: disable=arguments-differ
+    #     """
+    #     Defines the forward pass of the model. In addition, to facilitate easy training,
+    #     this method is designed to compute a loss function defined by a user.
+    #     The input is comprised of everything required to perform a
+    #     training update, `including` labels - you define the signature here!
+    #     It is down to the user to ensure that inference can be performed
+    #     without the presence of these labels. Hence, any inputs not available at
+    #     inference time should only be used inside a conditional block.
+    #     The intended sketch of this method is as follows::
+    #         def forward(self, input1, input2, targets=None):
+    #             ....
+    #             ....
+    #             output1 = self.layer1(input1)
+    #             output2 = self.layer2(input2)
+    #             output_dict = {"output1": output1, "output2": output2}
+    #             if targets is not None:
+    #                 # Function returning a scalar torch.Tensor, defined by the user.
+    #                 loss = self._compute_loss(output1, output2, targets)
+    #                 output_dict["loss"] = loss
+    #             return output_dict
+    #     Parameters
+    #     ----------
+    #     inputs:
+    #         Tensors comprising everything needed to perform a training update, `including` labels,
+    #         which should be optional (i.e have a default value of ``None``).  At inference time,
+    #         simply pass the relevant inputs, not including the labels.
+    #     Returns
+    #     -------
+    #     output_dict: ``Dict[str, torch.Tensor]``
+    #         The outputs from the model. In order to train a model using the
+    #         :class:`~allennlp.training.Trainer` api, you must provide a "loss" key pointing to a
+    #         scalar ``torch.Tensor`` representing the loss to be optimized.
+    #     """
+    #     raise NotImplementedError
 
     def forward_on_instance(self, instance: Instance) -> Dict[str, numpy.ndarray]:
         """
@@ -140,7 +277,7 @@ class Model(torch.nn.Module, Registrable):
         A list of the models output for each instance.
         """
         batch_size = len(instances)
-        with torch.no_grad():
+        with no_grad():
             cuda_device = self._get_prediction_device()
             dataset = Batch(instances)
             dataset.index_instances(self.vocab)
@@ -149,7 +286,7 @@ class Model(torch.nn.Module, Registrable):
 
             instance_separated_output: List[Dict[str, numpy.ndarray]] = [{} for _ in dataset.instances]
             for name, output in list(outputs.items()):
-                if isinstance(output, torch.Tensor):
+                if isinstance(output, Tensor):
                     # NOTE(markn): This is a hack because 0-dim pytorch tensors are not iterable.
                     # This occurs with batch size 1, because we still want to include the loss in that case.
                     if output.dim() == 0:
@@ -167,7 +304,7 @@ class Model(torch.nn.Module, Registrable):
                     instance_output[name] = batch_element
             return instance_separated_output
 
-    def decode(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
+    def decode(self, output_dict: Dict[str, Tensor]) -> Dict[str, Tensor]:
         """
         Takes the result of :func:`forward` and runs inference / decoding / whatever
         post-processing you need to do your model.  The intent is that ``model.forward()`` should
@@ -256,7 +393,7 @@ class Model(torch.nn.Module, Registrable):
         # want the code to look for it, so we remove it from the parameters here.
         remove_pretrained_embedding_params(model_params)
         model = Model.from_params(vocab=vocab, params=model_params)
-        model_state = torch.load(weights_file, map_location=util.device_mapping(cuda_device))
+        model_state = load(weights_file, map_location=util.device_mapping(cuda_device))
 
         # TERRIBLE WORKAROUND, DERIVED FROM ERROR MESSAGES
         missing_keys = ["_states.xintent.embedder.weight", "_states.xintent.decoder_cell.weight_ih", "_states.xintent.decoder_cell.weight_hh", "_states.xintent.decoder_cell.bias_ih", "_states.xintent.decoder_cell.bias_hh", "_states.xintent.output_projection_layer.weight", "_states.xintent.output_projection_layer.bias", "_states.xreact.embedder.weight", "_states.xreact.decoder_cell.weight_ih", "_states.xreact.decoder_cell.weight_hh", "_states.xreact.decoder_cell.bias_ih", "_states.xreact.decoder_cell.bias_hh", "_states.xreact.output_projection_layer.weight", "_states.xreact.output_projection_layer.bias", "_states.oreact.embedder.weight", "_states.oreact.decoder_cell.weight_ih", "_states.oreact.decoder_cell.weight_hh", "_states.oreact.decoder_cell.bias_ih", "_states.oreact.decoder_cell.bias_hh", "_states.oreact.output_projection_layer.weight", "_states.oreact.output_projection_layer.bias"]
@@ -327,26 +464,26 @@ def remove_pretrained_embedding_params(params: Params):
 ################################################################################
 # from https://github.com/allenai/allennlp/blob/master/allennlp/models/event2mind.py
 
-from typing import Dict, List, Optional, Tuple
-
-import numpy
-from overrides import overrides
-
-import torch
-from torch.nn import Module, ModuleDict
-from torch.nn.modules.rnn import GRUCell
-from torch.nn.modules.linear import Linear
-from torch import nn
-import torch.nn.functional as F
-
-from allennlp.common.util import START_SYMBOL, END_SYMBOL
-from allennlp.data.vocabulary import Vocabulary
-from allennlp.modules import Seq2VecEncoder, TextFieldEmbedder
-from allennlp.modules.token_embedders import Embedding
-# from allennlp.models.model import Model
-from allennlp.nn.beam_search import BeamSearch
-from allennlp.nn.util import get_text_field_mask, sequence_cross_entropy_with_logits
-from allennlp.training.metrics import UnigramRecall
+# from typing import Dict, List, Optional, Tuple
+#
+# # import numpy
+# from overrides import overrides
+#
+# import torch
+# from torch.nn import Module, ModuleDict
+# from torch.nn.modules.rnn import GRUCell
+# from torch.nn.modules.linear import Linear
+# from torch import nn
+# import torch.nn.functional as F
+#
+# from allennlp.common.util import START_SYMBOL, END_SYMBOL
+# from allennlp.data.vocabulary import Vocabulary
+# from allennlp.modules import Seq2VecEncoder, TextFieldEmbedder
+# from allennlp.modules.token_embedders import Embedding
+# # from allennlp.models.model import Model
+# from allennlp.nn.beam_search import BeamSearch
+# from allennlp.nn.util import get_text_field_mask, sequence_cross_entropy_with_logits
+# from allennlp.training.metrics import UnigramRecall
 
 
 @Model.register("event2mind")
@@ -435,8 +572,8 @@ class Event2Mind(Model):
         )
 
     def _update_recall(self,
-                       all_top_k_predictions: torch.Tensor,
-                       target_tokens: Dict[str, torch.LongTensor],
+                       all_top_k_predictions: Tensor,
+                       target_tokens: Dict[str, LongTensor],
                        target_recall: UnigramRecall) -> None:
         targets = target_tokens["tokens"]
         target_mask = get_text_field_mask(target_tokens)
@@ -452,7 +589,7 @@ class Event2Mind(Model):
         )
 
     def _get_num_decoding_steps(self,
-                                target_tokens: Optional[Dict[str, torch.LongTensor]]) -> int:
+                                target_tokens: Optional[Dict[str, LongTensor]]) -> int:
         if target_tokens:
             targets = target_tokens["tokens"]
             target_sequence_length = targets.size()[1]
@@ -464,10 +601,11 @@ class Event2Mind(Model):
         else:
             return self._max_decoding_steps
 
+    # NEEDED
     @overrides
     def forward(self,  # type: ignore
-                source: Dict[str, torch.LongTensor],
-                **target_tokens: Dict[str, Dict[str, torch.LongTensor]]) -> Dict[str, torch.Tensor]:
+                source: Dict[str, LongTensor],
+                **target_tokens: Dict[str, Dict[str, LongTensor]]) -> Dict[str, Tensor]:
         # pylint: disable=arguments-differ
         """
         Decoder logic for producing the target sequences.
@@ -516,7 +654,7 @@ class Event2Mind(Model):
             batch_size = final_encoder_output.size()[0]
             for name, state in self._states.items():
                 start_predictions = final_encoder_output.new_full(
-                        (batch_size,), fill_value=self._start_index, dtype=torch.long)
+                        (batch_size,), fill_value=self._start_index, dtype=long)
                 start_state = {"decoder_hidden": final_encoder_output}
 
                 # (batch_size, 10, num_decoding_steps)
@@ -531,11 +669,11 @@ class Event2Mind(Model):
         return output_dict
 
     def greedy_search(self,
-                      final_encoder_output: torch.LongTensor,
-                      target_tokens: Dict[str, torch.LongTensor],
+                      final_encoder_output: LongTensor,
+                      target_tokens: Dict[str, LongTensor],
                       target_embedder: Embedding,
                       decoder_cell: GRUCell,
-                      output_projection_layer: Linear) -> torch.FloatTensor:
+                      output_projection_layer: Linear) -> FloatTensor:
         """
         Greedily produces a sequence using the provided ``decoder_cell``.
         Returns the cross entropy between this sequence and ``target_tokens``.
@@ -552,29 +690,30 @@ class Event2Mind(Model):
         output_projection_layer: ``Linear``, required
             Linear layer mapping to the desired number of classes.
         """
-        num_decoding_steps = self._get_num_decoding_steps(target_tokens)
-        targets = target_tokens["tokens"]
-        decoder_hidden = final_encoder_output
-        step_logits = []
-        for timestep in range(num_decoding_steps):
-            # See https://github.com/allenai/allennlp/issues/1134.
-            input_choices = targets[:, timestep]
-            decoder_input = target_embedder(input_choices)
-            decoder_hidden = decoder_cell(decoder_input, decoder_hidden)
-            # (batch_size, num_classes)
-            output_projections = output_projection_layer(decoder_hidden)
-            # list of (batch_size, 1, num_classes)
-            step_logits.append(output_projections.unsqueeze(1))
-        # (batch_size, num_decoding_steps, num_classes)
-        logits = torch.cat(step_logits, 1)
-        target_mask = get_text_field_mask(target_tokens)
-        return self._get_loss(logits, targets, target_mask)
+        # num_decoding_steps = self._get_num_decoding_steps(target_tokens)
+        # targets = target_tokens["tokens"]
+        # decoder_hidden = final_encoder_output
+        # step_logits = []
+        # for timestep in range(num_decoding_steps):
+        #     # See https://github.com/allenai/allennlp/issues/1134.
+        #     input_choices = targets[:, timestep]
+        #     decoder_input = target_embedder(input_choices)
+        #     decoder_hidden = decoder_cell(decoder_input, decoder_hidden)
+        #     # (batch_size, num_classes)
+        #     output_projections = output_projection_layer(decoder_hidden)
+        #     # list of (batch_size, 1, num_classes)
+        #     step_logits.append(output_projections.unsqueeze(1))
+        # # (batch_size, num_decoding_steps, num_classes)
+        # logits = torch.cat(step_logits, 1)
+        # target_mask = get_text_field_mask(target_tokens)
+        # return self._get_loss(logits, targets, target_mask)
+        pass
 
     def greedy_predict(self,
-                       final_encoder_output: torch.LongTensor,
+                       final_encoder_output: LongTensor,
                        target_embedder: Embedding,
                        decoder_cell: GRUCell,
-                       output_projection_layer: Linear) -> torch.Tensor:
+                       output_projection_layer: Linear) -> Tensor:
         """
         Greedily produces a sequence using the provided ``decoder_cell``.
         Returns the predicted sequence.
@@ -589,29 +728,30 @@ class Event2Mind(Model):
         output_projection_layer: ``Linear``, required
             Linear layer mapping to the desired number of classes.
         """
-        num_decoding_steps = self._max_decoding_steps
-        decoder_hidden = final_encoder_output
-        batch_size = final_encoder_output.size()[0]
-        predictions = [final_encoder_output.new_full(
-                (batch_size,), fill_value=self._start_index, dtype=torch.long
-        )]
-        for _ in range(num_decoding_steps):
-            input_choices = predictions[-1]
-            decoder_input = target_embedder(input_choices)
-            decoder_hidden = decoder_cell(decoder_input, decoder_hidden)
-            # (batch_size, num_classes)
-            output_projections = output_projection_layer(decoder_hidden)
-            class_probabilities = F.softmax(output_projections, dim=-1)
-            _, predicted_classes = torch.max(class_probabilities, 1)
-            predictions.append(predicted_classes)
-        all_predictions = torch.cat([ps.unsqueeze(1) for ps in predictions], 1)
-        # Drop start symbol and return.
-        return all_predictions[:, 1:]
+        # num_decoding_steps = self._max_decoding_steps
+        # decoder_hidden = final_encoder_output
+        # batch_size = final_encoder_output.size()[0]
+        # predictions = [final_encoder_output.new_full(
+        #         (batch_size,), fill_value=self._start_index, dtype=torch.long
+        # )]
+        # for _ in range(num_decoding_steps):
+        #     input_choices = predictions[-1]
+        #     decoder_input = target_embedder(input_choices)
+        #     decoder_hidden = decoder_cell(decoder_input, decoder_hidden)
+        #     # (batch_size, num_classes)
+        #     output_projections = output_projection_layer(decoder_hidden)
+        #     class_probabilities = F.softmax(output_projections, dim=-1)
+        #     _, predicted_classes = torch.max(class_probabilities, 1)
+        #     predictions.append(predicted_classes)
+        # all_predictions = torch.cat([ps.unsqueeze(1) for ps in predictions], 1)
+        # # Drop start symbol and return.
+        # return all_predictions[:, 1:]
+        pass
 
     @staticmethod
-    def _get_loss(logits: torch.LongTensor,
-                  targets: torch.LongTensor,
-                  target_mask: torch.LongTensor) -> torch.FloatTensor:
+    def _get_loss(logits: LongTensor,
+                  targets: LongTensor,
+                  target_mask: LongTensor) -> FloatTensor:
         """
         Takes logits (unnormalized outputs from the decoder) of size (batch_size,
         num_decoding_steps, num_classes), target indices of size (batch_size, num_decoding_steps+1)
@@ -633,12 +773,13 @@ class Event2Mind(Model):
            against                l1  l2  l3  l4  l5  l6
            (where the input was)  <S> w1  w2  w3  <E> <P>
         """
-        relevant_targets = targets[:, 1:].contiguous()  # (batch_size, num_decoding_steps)
-        relevant_mask = target_mask[:, 1:].contiguous()  # (batch_size, num_decoding_steps)
-        loss = sequence_cross_entropy_with_logits(logits, relevant_targets, relevant_mask)
-        return loss
+        # relevant_targets = targets[:, 1:].contiguous()  # (batch_size, num_decoding_steps)
+        # relevant_mask = target_mask[:, 1:].contiguous()  # (batch_size, num_decoding_steps)
+        # loss = sequence_cross_entropy_with_logits(logits, relevant_targets, relevant_mask)
+        # return loss
+        pass
 
-    def decode_all(self, predicted_indices: torch.Tensor) -> List[List[str]]:
+    def decode_all(self, predicted_indices: Tensor) -> List[List[str]]:
         if not isinstance(predicted_indices, numpy.ndarray):
             predicted_indices = predicted_indices.detach().cpu().numpy()
         all_predicted_tokens = []
@@ -653,7 +794,7 @@ class Event2Mind(Model):
         return all_predicted_tokens
 
     @overrides
-    def decode(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, List[List[str]]]:
+    def decode(self, output_dict: Dict[str, Tensor]) -> Dict[str, List[List[str]]]:
         """
         This method overrides ``Model.decode``, which gets called after ``Model.forward``, at test
         time, to finalize predictions. The logic for the decoder part of the encoder-decoder lives
@@ -693,8 +834,8 @@ class StateDecoder(Module):
         self.recall = UnigramRecall()
 
     def take_step(self,
-                  last_predictions: torch.Tensor,
-                  state: Dict[str, torch.Tensor]) -> Tuple[torch.Tensor, Dict[str, torch.Tensor]]:
+                  last_predictions: Tensor,
+                  state: Dict[str, Tensor]) -> Tuple[Tensor, Dict[str, Tensor]]:
         decoder_hidden = state["decoder_hidden"]
         decoder_input = self.embedder(last_predictions)
         decoder_hidden = self.decoder_cell(decoder_input, decoder_hidden)
@@ -710,17 +851,17 @@ class StateDecoder(Module):
 Helper functions for archiving models and restoring archived models.
 """
 
-from typing import NamedTuple, Dict, Any
-import json
-import logging
-import os
-import tempfile
-import tarfile
-import shutil
-
-from allennlp.common.file_utils import cached_path
-from allennlp.common.params import Params, unflatten, with_fallback, parse_overrides
-from allennlp.models.model import _DEFAULT_WEIGHTS # Model, _DEFAULT_WEIGHTS
+# from typing import NamedTuple, Dict, Any
+# import json
+# import logging
+# import os
+# import tempfile
+# import tarfile
+# import shutil
+#
+# from allennlp.common.file_utils import cached_path
+# from allennlp.common.params import Params, unflatten, with_fallback, parse_overrides
+# from allennlp.models.model import _DEFAULT_WEIGHTS # Model, _DEFAULT_WEIGHTS
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -756,38 +897,39 @@ def archive_model(serialization_dir: str,
         in the archive. That is, if you wanted to include ``params['model']['weights']``
         then you would specify the key as `"model.weights"`.
     """
-    weights_file = os.path.join(serialization_dir, weights)
-    if not os.path.exists(weights_file):
-        logger.error("weights file %s does not exist, unable to archive model", weights_file)
-        return
-
-    config_file = os.path.join(serialization_dir, CONFIG_NAME)
-    if not os.path.exists(config_file):
-        logger.error("config file %s does not exist, unable to archive model", config_file)
-
-    # If there are files we want to archive, write out the mapping
-    # so that we can use it during de-archiving.
-    if files_to_archive:
-        fta_filename = os.path.join(serialization_dir, _FTA_NAME)
-        with open(fta_filename, 'w') as fta_file:
-            fta_file.write(json.dumps(files_to_archive))
-
-
-    archive_file = os.path.join(serialization_dir, "model.tar.gz")
-    logger.info("archiving weights and vocabulary to %s", archive_file)
-    with tarfile.open(archive_file, 'w:gz') as archive:
-        archive.add(config_file, arcname=CONFIG_NAME)
-        archive.add(weights_file, arcname=_WEIGHTS_NAME)
-        archive.add(os.path.join(serialization_dir, "vocabulary"),
-                    arcname="vocabulary")
-
-        # If there are supplemental files to archive:
-        if files_to_archive:
-            # Archive the { flattened_key -> original_filename } mapping.
-            archive.add(fta_filename, arcname=_FTA_NAME)
-            # And add each requested file to the archive.
-            for key, filename in files_to_archive.items():
-                archive.add(filename, arcname=f"fta/{key}")
+    pass
+    # weights_file = os.path.join(serialization_dir, weights)
+    # if not os.path.exists(weights_file):
+    #     logger.error("weights file %s does not exist, unable to archive model", weights_file)
+    #     return
+    #
+    # config_file = os.path.join(serialization_dir, CONFIG_NAME)
+    # if not os.path.exists(config_file):
+    #     logger.error("config file %s does not exist, unable to archive model", config_file)
+    #
+    # # If there are files we want to archive, write out the mapping
+    # # so that we can use it during de-archiving.
+    # if files_to_archive:
+    #     fta_filename = os.path.join(serialization_dir, _FTA_NAME)
+    #     with open(fta_filename, 'w') as fta_file:
+    #         fta_file.write(json.dumps(files_to_archive))
+    #
+    #
+    # archive_file = os.path.join(serialization_dir, "model.tar.gz")
+    # logger.info("archiving weights and vocabulary to %s", archive_file)
+    # with tarfile.open(archive_file, 'w:gz') as archive:
+    #     archive.add(config_file, arcname=CONFIG_NAME)
+    #     archive.add(weights_file, arcname=_WEIGHTS_NAME)
+    #     archive.add(os.path.join(serialization_dir, "vocabulary"),
+    #                 arcname="vocabulary")
+    #
+    #     # If there are supplemental files to archive:
+    #     if files_to_archive:
+    #         # Archive the { flattened_key -> original_filename } mapping.
+    #         archive.add(fta_filename, arcname=_FTA_NAME)
+    #         # And add each requested file to the archive.
+    #         for key, filename in files_to_archive.items():
+    #             archive.add(filename, arcname=f"fta/{key}")
 
 def load_event2mind_archive(archive_file: str,
                  cuda_device: int = -1,
