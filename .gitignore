@@ -1,5 +1,6 @@
 .DS_Store
 .env
 venv
-data/decomposable-attention.tar.gz
+not_data/
+notebooks/
 .pytest_cache/
