@@ -1,3 +1,4 @@
+https://download.pytorch.org/whl/cpu/torch-1.0.1.post2-cp37-cp37m-linux_x86_64.whl
 certifi==2018.10.15
 chardet==3.0.4
 Click==7.0
@@ -31,4 +32,3 @@ urllib3==1.24.1
 Werkzeug==0.14.1
 wrapt==1.10.11
 nltk==3.4
-http://download.pytorch.org/whl/cpu/torch-0.4.1-cp36-cp36m-linux_x86_64.whl
