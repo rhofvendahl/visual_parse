@@ -51,6 +51,8 @@ from flask import Flask, render_template, request, jsonify
 from modl import Model, nlp
 # print('post modl:', memory() / 1000000, "MB")
 
+import requests
+
 app = Flask(__name__)
 
 # import spacy
@@ -77,6 +79,7 @@ def get_token_list(doc_instance):
     return token_list
 
 def get_model_dict(model_instance):
+
     model_dict = {
         'entities': [{
             'id': entity.id,
@@ -104,6 +107,19 @@ def get_model_dict(model_instance):
     }
     return model_dict
 
+def fetch_predictions(sources):
+    response = requests.post(
+        url = 'https://vp-event2mind.herokuapp.com/predict',
+        headers={
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data = {'sources': sources})
+    print('RESPONSE:', response)
+    content = response.json()
+    print('CONTENT:', content)
+    return content['predictions']
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -120,8 +136,11 @@ def parse():
 @app.route('/parse_experimental_also', methods = ['POST'])
 def parse_experimental_also():
     content = request.get_json()
-    model.process(content['text'])
     doc = model.doc
+    model.process(content['text'])
+    sources = model.get_event2mind_sources()
+    predictions = fetch_predictions(sources)
+    model.generate_event2mind_statements_from_predictions(predictions)
 
     return jsonify({
         'tokens': get_token_list(doc),
@@ -132,11 +151,15 @@ def parse_experimental_also():
 def parse_experimental_only():
     content = request.get_json()
     model.process(content['text'])
+    sources = model.get_event2mind_sources()
+    predictions = fetch_predictions(sources)
+    model.generate_event2mind_statements_from_predictions(predictions)
 
     return jsonify({
         'model': get_model_dict(model)
     })
-print('right about to run:', memory() / 1000000, "MB")
+
+# print('right about to run:', memory() / 1000000, "MB")
 
 if __name__ == "__main__":
     app.run()

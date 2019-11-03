@@ -269,18 +269,14 @@ class Model:
                 if conjuncted != None:
                     self.extract_statements(conjuncted, previous_subject=subject)
 
-    def generate_event2mind_statements(self):
-        # TODO: sub PersonY for people in subject
-        # TODO: needs refactoring generally (everything does..)
-        # TODO: the differening text all over the place is a nightmare, fix
-
-        # for turning emotion string texts into proper emotion strings
+    def get_event2mind_sources(self):
         def str_to_list(emotion_str):
             emotion_str = emotion_str[2:-2]
             if emotion_str[-1] == '.':
                 emotion_str = emotion_str[:-1]
             return re.split('","|", "|, ',emotion_str)
 
+        sources = []
         person_statements = []
         # TODO: with a db this would be an sql query or something
         for statement in self.statements:
@@ -290,9 +286,53 @@ class Model:
                     person_statements.append(statement)
         for statement in person_statements:
             subject_entity = self.get_entity(statement.subject_id)
-            prediction = event2mind_predictor.predict(
-              source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
-            )
+            sources.append('PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text))
+            # prediction = event2mind_predictor.predict(
+            #   source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
+            # )
+            #
+            # for emotion, log_p in zip(
+            #     prediction['xreact_top_k_predicted_tokens'],
+            #     prediction['xreact_top_k_log_probabilities']
+            # ):
+            #     emotion = ' '.join(emotion)
+            #     p = math.exp(log_p)
+            #
+            #     feels_statement = self.get_or_create_statement(
+            #         subject_text = subject_entity.text,
+            #         subject_id = subject_entity.id,
+            #         predicate_text = 'feels',
+            #         object_text = emotion,
+            #         object_id = None,
+            #         source = 'event2mind'
+            #     )
+            #
+            #     inference = Inference(
+            #         id_ = len(self.inferences),
+            #         to = feels_statement.id,
+            #         from_ = statement.id,
+            #         weight = p,
+            #         source = 'event2mind'
+            #     )
+            #     self.inferences.append(inference)
+        return sources
+
+    def generate_event2mind_statements_from_predictions(self, predictions):
+        # TODO: needs refactoring generally (everything does..)
+        # TODO: the differening text all over the place is a nightmare, fix
+
+        # TODO: with a db this would be an sql query or something
+        # for statement in self.statements:
+        #      if statement.subject_id != None:
+        #         subject_entity = self.get_entity(statement.subject_id)
+        #         if subject_entity != None and subject_entity.class_ == 'PERSON':
+        #             person_statements.append(statement)
+        # if len(self.statements) == len(predictions):
+        for i, prediction in enumerate(predictions): # will be modifying statements as I go, for now I'llassume this is ok
+            # prediction = event2mind_predictor.predict(
+            #   source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
+            # )
+            subject_entity = self.get_entity(statements[i].subject_id)
 
             for emotion, log_p in zip(
                 prediction['xreact_top_k_predicted_tokens'],
@@ -318,6 +358,58 @@ class Model:
                     source = 'event2mind'
                 )
                 self.inferences.append(inference)
+            # else:
+            #     print('Error: statements/predictions mismatch.')
+
+    # def generate_event2mind_statements(self):
+    #     TODO: sub PersonY for people in subject
+    #     # TODO: needs refactoring generally (everything does..)
+    #     # TODO: the differening text all over the place is a nightmare, fix
+    #
+    #     # for turning emotion string texts into proper emotion strings
+    #     def str_to_list(emotion_str):
+    #         emotion_str = emotion_str[2:-2]
+    #         if emotion_str[-1] == '.':
+    #             emotion_str = emotion_str[:-1]
+    #         return re.split('","|", "|, ',emotion_str)
+    #
+    #     person_statements = []
+    #     # TODO: with a db this would be an sql query or something
+    #     for statement in self.statements:
+    #          if statement.subject_id != None:
+    #             subject_entity = self.get_entity(statement.subject_id)
+    #             if subject_entity != None and subject_entity.class_ == 'PERSON':
+    #                 person_statements.append(statement)
+    #     for statement in person_statements:
+    #         subject_entity = self.get_entity(statement.subject_id)
+    #         prediction = event2mind_predictor.predict(
+    #           source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
+    #         )
+    #
+    #         for emotion, log_p in zip(
+    #             prediction['xreact_top_k_predicted_tokens'],
+    #             prediction['xreact_top_k_log_probabilities']
+    #         ):
+    #             emotion = ' '.join(emotion)
+    #             p = math.exp(log_p)
+    #
+    #             feels_statement = self.get_or_create_statement(
+    #                 subject_text = subject_entity.text,
+    #                 subject_id = subject_entity.id,
+    #                 predicate_text = 'feels',
+    #                 object_text = emotion,
+    #                 object_id = None,
+    #                 source = 'event2mind'
+    #             )
+    #
+    #             inference = Inference(
+    #                 id_ = len(self.inferences),
+    #                 to = feels_statement.id,
+    #                 from_ = statement.id,
+    #                 weight = p,
+    #                 source = 'event2mind'
+    #             )
+    #             self.inferences.append(inference)
 
     # def generate_emotional_inferences(self):
     #     feeling_statements = [statement for statement]
