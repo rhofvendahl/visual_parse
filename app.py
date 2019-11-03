@@ -114,7 +114,7 @@ def fetch_predictions(sources):
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        data = {'sources': sources})
+        json = {'sources': sources})
     print('RESPONSE:', response)
     content = response.json()
     print('CONTENT:', content)
