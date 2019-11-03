@@ -61,7 +61,7 @@ app = Flask(__name__)
 # print('Load complete.')
 
 model = Model()
-print('pre flask and stuff:', memory() / 1000000, "MB")
+# print('pre flask and stuff:', memory() / 1000000, "MB")
 
 def get_token_list(doc_instance):
     noun_chunk_tokens = [chunk.root for chunk in doc_instance.noun_chunks]
