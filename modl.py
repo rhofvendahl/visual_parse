@@ -48,9 +48,12 @@ print('MEMORY pre spacy and stuff:', memory() / 1000000, "MB")
 import spacy
 from spacy.tokens import Span # Doc, Span, Token
 print('MEMORY post spacy and span pre textacy:', memory() / 1000000, "MB")
-import textacy
+# from textacy.preprocess import normalize_whitespace
+# from textacy.spacier import utils
 # from event2mind_hack import load_event2mind_archive
 # from allennlp.predictors.predictor import Predictor
+from textacy_hack import get_span_for_verb_auxiliaries, normalize_unicode, normalize_whitespace, remove_accents, unpack_contractions
+
 import math
 import re
 print('MEMORY post textacy math re pre set ext and load:', memory() / 1000000, "MB")
@@ -65,7 +68,6 @@ nlp = spacy.load('en_coref_sm')
 print('Load complete.')
 
 print('MEMORY post load en coref sm:', memory() / 1000000, "MB")
-
 
 class Entity:
     def __init__(self, id_, text, class_):
@@ -112,10 +114,11 @@ class Model:
 
     def process(self, text):
         self.raw = text
-        preprocessed = textacy.preprocess.normalize_whitespace(text)
-        preprocessed = textacy.preprocess.fix_bad_unicode(preprocessed)
-        preprocessed = textacy.preprocess.unpack_contractions(preprocessed)
-        preprocessed = textacy.preprocess.remove_accents(preprocessed)
+        preprocessed = normalize_whitespace(text)
+        # preprocessed = preprocess.fix_bad_unicode(preprocessed)
+        # preprocessed = preprocess.normalize_unicode(preprocessed)
+        preprocessed = preprocess.unpack_contractions(preprocessed)
+        # preprocessed = preprocess.remove_accents(preprocessed)
 #         preprocessed = textacy.preprocess.preprocess_text(preprocessed, fix_unicode=True, no_contractions=True, no_accents=True)
         self.doc = nlp(preprocessed)
         self.named_entities = [ent for ent in self.doc.ents]
@@ -249,7 +252,7 @@ class Model:
     def extract_statements(self, span, previous_subject=None, previous_predicate=None):
         # TODO: I think sometimes conjunctions are missing predicates? maybe not
         # TODO: some subjects are 'they' or 'mary and sue' - split into two statements, one for each.
-        first, last = textacy.spacier.utils.get_span_for_verb_auxiliaries(span.root)
+        first, last = get_span_for_verb_auxiliaries(span.root)
         beginning = self.doc[span.start:first]
         middle = self.doc[first:last+1]
         end = self.doc[last+1:span.end]
