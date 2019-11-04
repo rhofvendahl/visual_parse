@@ -323,6 +323,15 @@ class Model:
                 # TODO: this might make duplicates if multiple subjects, fix that
                 if conjuncted != None:
                     self.extract_statements(conjuncted, previous_subject=subject)
+    def get_person_statements(self):
+        person_statements = []
+        # TODO: with a db this would be an sql query or something
+        for statement in self.statements:
+             if statement.subject_id != None:
+                subject_entity = self.get_entity(statement.subject_id)
+                if subject_entity != None and subject_entity.class_ == 'PERSON':
+                    person_statements.append(statement)
+        return person_statements
 
     def get_event2mind_sources(self):
         def str_to_list(emotion_str):
@@ -332,13 +341,7 @@ class Model:
             return re.split('","|", "|, ',emotion_str)
 
         sources = []
-        person_statements = []
-        # TODO: with a db this would be an sql query or something
-        for statement in self.statements:
-             if statement.subject_id != None:
-                subject_entity = self.get_entity(statement.subject_id)
-                if subject_entity != None and subject_entity.class_ == 'PERSON':
-                    person_statements.append(statement)
+        person_statements = self.get_person_statements()
         for statement in person_statements:
             subject_entity = self.get_entity(statement.subject_id)
             sources.append('PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text))
@@ -383,11 +386,13 @@ class Model:
         #         if subject_entity != None and subject_entity.class_ == 'PERSON':
         #             person_statements.append(statement)
         # if len(self.statements) == len(predictions):
+        person_statements = self.get_person_statements();
         for i, prediction in enumerate(predictions): # will be modifying statements as I go, for now I'llassume this is ok
             # prediction = event2mind_predictor.predict(
             #   source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
             # )
-            subject_entity = self.get_entity(self.statements[i].subject_id)
+            person_statement = person_statements[i]
+            subject_entity = self.get_entity(person_statement.subject_id)
 
             for emotion, log_p in zip(
                 prediction['xreact_top_k_predicted_tokens'],
@@ -408,7 +413,7 @@ class Model:
                 inference = Inference(
                     id_ = len(self.inferences),
                     to = feels_statement.id,
-                    from_ = statement.id,
+                    from_ = person_statement.id,
                     weight = p,
                     source = 'event2mind'
                 )
