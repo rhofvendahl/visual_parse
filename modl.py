@@ -115,10 +115,10 @@ class Model:
     def process(self, text):
         self.raw = text
         preprocessed = normalize_whitespace(text)
-        # preprocessed = preprocess.fix_bad_unicode(preprocessed)
-        # preprocessed = preprocess.normalize_unicode(preprocessed)
-        preprocessed = preprocess.unpack_contractions(preprocessed)
-        # preprocessed = preprocess.remove_accents(preprocessed)
+        # preprocessed = fix_bad_unicode(preprocessed)
+        # preprocessed = normalize_unicode(preprocessed)
+        preprocessed = unpack_contractions(preprocessed)
+        # preprocessed = remove_accents(preprocessed)
 #         preprocessed = textacy.preprocess.preprocess_text(preprocessed, fix_unicode=True, no_contractions=True, no_accents=True)
         self.doc = nlp(preprocessed)
         self.named_entities = [ent for ent in self.doc.ents]
