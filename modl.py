@@ -387,7 +387,7 @@ class Model:
             # prediction = event2mind_predictor.predict(
             #   source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
             # )
-            subject_entity = self.get_entity(statements[i].subject_id)
+            subject_entity = self.get_entity(self.statements[i].subject_id)
 
             for emotion, log_p in zip(
                 prediction['xreact_top_k_predicted_tokens'],
