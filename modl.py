@@ -63,8 +63,8 @@ Span.set_extension('entity_id', default=None, force=True)
 # archive = load_event2mind_archive('data/event2mind.tar.gz')
 # event2mind_predictor = Predictor.from_archive(archive)
 
-print('Loading en_coref_sm...')
-nlp = spacy.load('en_coref_sm')
+print('Loading en_coref_md...')
+nlp = spacy.load('en_coref_md')
 print('Load complete.')
 
 print('MEMORY post load en coref sm:', memory() / 1000000, "MB")
