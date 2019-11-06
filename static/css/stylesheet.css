@@ -40,6 +40,37 @@ body {
     cursor: col-resize;
 }
 
+#handle {
+    position: relative;
+    top: 50%;
+    z-index: 1;
+}
+
+#triangle-left, #triangle-right {
+    position: absolute;
+    /* top: 50%; */
+    /* z-index: 1; */
+    font-size: 20px;
+    transform: translateY(-50%);
+    color: lightgrey;
+}
+
+#triangle-left {
+    /* position: absolute; */
+    /* font-size: 160px; */
+    right: calc(100% + 8px);
+    /* bottom: 50%; */
+    /* top: -50%; */
+    /* margin-top: -500%; */
+}
+
+#triangle-right {
+    /* position: absolute; */
+    /* font-size: 160px; */
+    left: calc(100% + 8px);
+    /* translate */
+}
+
 .panel-right {
     position: relative;
     flex: 1 1 auto;
@@ -88,6 +119,12 @@ body {
     right: 20px;
     font-size: 56px;
     color: lightgrey;
+    z-index: 1;
+}
+
+#about a {
+    color: inherit;
+    text-decoration: none;
 }
 
 /* html, body {
