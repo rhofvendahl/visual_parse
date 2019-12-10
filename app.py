@@ -126,6 +126,8 @@ def index():
 
 @app.route('/parse', methods=['POST'])
 def parse():
+    print()
+    print()
     content = request.get_json()
     doc = nlp(content['text'])
 
@@ -135,12 +137,14 @@ def parse():
 
 @app.route('/parse_experimental_also', methods = ['POST'])
 def parse_experimental_also():
+    print()
+    print()
     content = request.get_json()
     doc = model.doc
     model.process(content['text'])
     sources = model.get_event2mind_sources()
     predictions = fetch_predictions(sources)
-    model.generate_event2mind_statements_from_predictions(predictions)
+    model.generate_event2mind_statements_from_predictions(predictions) # Why is this being run 3x?
 
     return jsonify({
         'tokens': get_token_list(doc),
@@ -149,12 +153,15 @@ def parse_experimental_also():
 
 @app.route('/parse_experimental_only', methods = ['POST'])
 def parse_experimental_only():
+    print()
+    print()
     content = request.get_json()
     model.process(content['text'])
     sources = model.get_event2mind_sources()
     predictions = fetch_predictions(sources)
-    model.generate_event2mind_statements_from_predictions(predictions)
-
+    model.generate_event2mind_statements_from_predictions(predictions) # Why is this being run 3x?
+    model_dict = get_model_dict(model)
+    print(model_dict['inferences'])
     return jsonify({
         'model': get_model_dict(model)
     })

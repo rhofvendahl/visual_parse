@@ -182,6 +182,21 @@ class Model:
             self.statements.append(statement)
             return statement
 
+    def get_or_create_inference(self, to, from_, weight, source):
+        for i in self.inferences:
+            if i.to == to and i.from_ == from_ and i.weight == weight and i.source == source:
+                return i
+        else:
+            inference = Inference(
+                id_ = len(self.inferences),
+                to = to,
+                from_ = from_,
+                weight = weight,
+                source = source
+            )
+            self.inferences.append(inference)
+            return inference
+
     def get_inference(self, inference_id):
         for inference in self.inferences:
             if inference.id == inference_id:
@@ -410,14 +425,21 @@ class Model:
                     source = 'event2mind'
                 )
 
-                inference = Inference(
-                    id_ = len(self.inferences),
+                # inference = Inference(
+                #     id_ = len(self.inferences),
+                #     to = feels_statement.id,
+                #     from_ = person_statement.id,
+                #     weight = p,
+                #     source = 'event2mind'
+                # )
+                # self.inferences.append(inference)
+
+                self.get_or_create_inference(
                     to = feels_statement.id,
                     from_ = person_statement.id,
                     weight = p,
                     source = 'event2mind'
                 )
-                self.inferences.append(inference)
             # else:
             #     print('Error: statements/predictions mismatch.')
 

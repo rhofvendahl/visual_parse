@@ -5,7 +5,7 @@ $(document).ready(function() {
     });
 
     var input = $('#text');
-    input.val('Suzy has had a bad day. Luckily, Sarah was there to give Suzy a hug!');
+    input.val('Suzy has had a bad day. Luckily, Sarah was there to hug Suzy! I am glad Suzy has such a good friend.');
     input.focus();
     input.prop('selectionStart', input.val().length);
     input.prop('selectionEnd', input.val().length);
