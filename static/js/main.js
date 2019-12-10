@@ -5,7 +5,7 @@ $(document).ready(function() {
     });
 
     var input = $('#text');
-    input.val('This is a dependency parse tree. Click, hover and type to explore!');
+    input.val('Suzy has had a bad day. Luckily, Sarah was there to give Suzy a hug!');
     input.focus();
     input.prop('selectionStart', input.val().length);
     input.prop('selectionEnd', input.val().length);

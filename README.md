@@ -19,7 +19,7 @@ Arrows are labeled with the relation type they represent, noun-chunks are colore
 #### Inferential Graph [Experimental]
 To the right of the resize-able divider, a number of inferred relations are visualized as a separate graph.
 
-Red nodes again represent noun chunks, now with all co-references ('this', 'that', 'him', 'it', etc.) consolidated into a single entity.
+Red nodes again represent noun chunks, now with all co-references ('this', 'that', 'him', 'it', etc.) consolidated into a single entity. Entities recognized as persons are connected with 'statement' nodes derived from the unstructured text. Lastly, for select statements the relevant person's possible state of mind is inferred and represented a series of additional statements, each labeled with the inferential weight.
 
 ## Pipeline
 
