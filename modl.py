@@ -63,8 +63,8 @@ Span.set_extension('entity_id', default=None, force=True)
 # archive = load_event2mind_archive('data/event2mind.tar.gz')
 # event2mind_predictor = Predictor.from_archive(archive)
 
-print('Loading en_coref_sm...')
-nlp = spacy.load('en_coref_sm')
+print('Loading en_coref_md...')
+nlp = spacy.load('en_coref_md')
 print('Load complete.')
 
 print('MEMORY post load en coref sm:', memory() / 1000000, "MB")
@@ -376,6 +376,7 @@ class Model:
         return sources
 
     def generate_event2mind_statements_from_predictions(self, predictions):
+        print('GENERATING EVENT2MIND STATEMENTS FROM PREDICTIONS')
         # TODO: needs refactoring generally (everything does..)
         # TODO: the differening text all over the place is a nightmare, fix
 
@@ -387,11 +388,10 @@ class Model:
         #             person_statements.append(statement)
         # if len(self.statements) == len(predictions):
         person_statements = self.get_person_statements();
-        for i, prediction in enumerate(predictions): # will be modifying statements as I go, for now I'llassume this is ok
+        for person_statement, prediction in zip(person_statements, predictions):
             # prediction = event2mind_predictor.predict(
             #   source='PersonX ' + str(statement.predicate_text) + ' ' + str(statement.object_text)
             # )
-            person_statement = person_statements[i]
             subject_entity = self.get_entity(person_statement.subject_id)
 
             for emotion, log_p in zip(

@@ -49,7 +49,7 @@ var UpdateManager = function(input) {
         }).then(function(response) {
             return response.json();
         }).then(function(json) {
-            // console.log(json);
+            console.log(json);
             self.experiment.render(json.model);
         });
     }
